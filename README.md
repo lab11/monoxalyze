@@ -20,5 +20,5 @@ We are building carbon monoxide meters that can discriminate between a smoker
 and a non-smoker by measuring CO in a person's breath. Our goal is to create
 devices that are small enough to carry in a pocket, and can be powered by
 a coin cell battery. These devices could then pair with a smartphone that 
-can process and report reading, while also identifying the user of the device.
+can process and report readings, while also identifying the user of the device.
 
