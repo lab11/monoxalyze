@@ -2925,6 +2925,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="SUPPLY13" library="supply1" deviceset="GND" device=""/>
 <part name="C12" library="passives" deviceset="CAPACITOR" device="" value=".1"/>
 <part name="C13" library="passives" deviceset="CAPACITOR" device="" value=".47"/>
+<part name="R13" library="passives" deviceset="RESISTOR" device="0402_RES" value="700k"/>
 </parts>
 <sheets>
 <sheet>
@@ -3577,6 +3578,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="SUPPLY13" gate="1" x="-86.36" y="-12.7"/>
 <instance part="C12" gate="G$1" x="-10.16" y="-27.94"/>
 <instance part="C13" gate="G$1" x="30.48" y="-27.94"/>
+<instance part="R13" gate="G$1" x="-93.98" y="35.56" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -3935,6 +3937,24 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="-27.94" y1="-33.02" x2="-20.32" y2="-33.02" width="0.1524" layer="91"/>
 <junction x="-27.94" y="-33.02"/>
 <label x="-20.32" y="-33.02" size="1.27" layer="95" rot="R270" xref="yes"/>
+</segment>
+</net>
+<net name="N$8" class="0">
+<segment>
+<pinref part="R13" gate="G$1" pin="2"/>
+<wire x1="-93.98" y1="40.64" x2="-88.9" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="-88.9" y1="40.64" x2="-88.9" y2="38.1" width="0.1524" layer="91"/>
+<pinref part="LMP91000" gate="G$1" pin="C1"/>
+<wire x1="-88.9" y1="38.1" x2="-83.82" y2="38.1" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$12" class="0">
+<segment>
+<pinref part="LMP91000" gate="G$1" pin="C2"/>
+<wire x1="-83.82" y1="33.02" x2="-88.9" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="-88.9" y1="33.02" x2="-88.9" y2="30.48" width="0.1524" layer="91"/>
+<pinref part="R13" gate="G$1" pin="1"/>
+<wire x1="-88.9" y1="30.48" x2="-93.98" y2="30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
