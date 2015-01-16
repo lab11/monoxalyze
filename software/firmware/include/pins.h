@@ -1,17 +1,27 @@
 #ifndef PINS_H
 #define PINS_H
 
+//P01
 #define LED_1 1 
+//p02
 #define LED_2 2 
+//p03
 #define LED_3 3
 
-#define CHRG 
-#define BATIN
+//p15
+#define CHRG  15
+//ain7
+#define BATIN 7
 
-#define SCL 12
-#define SDA 13
+//po9
+#define SCL 9
+//p08
+#define SDA 8
 
+//p05
 #define PINT
-#define VOUT
+
+//AIN5
+#define VOUT 5
 
 #endif

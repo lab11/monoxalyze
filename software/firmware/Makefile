@@ -4,10 +4,11 @@ APPLICATION_SRCS = $(notdir $(wildcard ./*.c))
 APPLICATION_SRCS += softdevice_handler.c
 APPLICATION_SRCS += app_timer.c
 APPLICATION_SRCS += led.c
-APPLICATION_SRCS += pressure.c
+APPLICATION_SRCS += lps25h.c
 APPLICATION_SRCS += battery.c
-APPLICATION_SRCS += gas.c
+APPLICATION_SRCS += lmp91000.c
 APPLICATION_SRCS += twi_hw_master.c
+APPLICATION_SRCS += adc.c
 
 
 SOFTDEVICE = $(HOME)/Programs/Nordic/softdevices/s110/s110_nrf51822_7.1.0_softdevice.hex

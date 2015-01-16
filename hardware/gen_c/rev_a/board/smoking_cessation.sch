@@ -3379,13 +3379,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="76.2" y="124.46" size="1.27" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="AFESHDN#" class="0">
-<segment>
-<pinref part="U1" gate="G$1" pin="P07"/>
-<wire x1="78.74" y1="116.84" x2="76.2" y2="116.84" width="0.1524" layer="91"/>
-<label x="76.2" y="116.84" size="1.27" layer="95" rot="R180" xref="yes"/>
-</segment>
-</net>
 <net name="N$7" class="0">
 <segment>
 <pinref part="LED1" gate="G$1" pin="C"/>

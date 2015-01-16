@@ -8,7 +8,9 @@
 #include "nordic_common.h"
 #include "app_timer.h"
 #include "softdevice_handler.h"
-#include "pressure.h"
+#include "lps25h.h"
+#include "lmp91000.h"
+#include "battery.h"
 
 
 #define LED            LED_1
