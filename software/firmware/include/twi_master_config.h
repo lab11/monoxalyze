@@ -1,0 +1,9 @@
+#ifndef TWI_MASTER_CONFIG_H
+#define TWI_MASTER_CONFIG_H
+
+#include "pins.h"
+
+#define TWI_MASTER_CONFIG_CLOCK_PIN_NUMBER SCL
+#define TWI_MASTER_CONFIG_DATA_PIN_NUMBER SDA
+
+#endif

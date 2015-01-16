@@ -1,11 +1,13 @@
-// LED Library
+#ifndef LED_H
+#define LED_H
 
-// Assumes active low LEDs
+uint8_t ledInit();
+void ledOn(uint8_t);
+void ledOff(uint8_t);
+void ledToggle(uint8_t);
 
-#include <stdint.h>
-#include "nrf_gpio.h"
+//turns the leds into a random configuration and returns that
+//configuration in octal
+uint8_t genRandomLed(void);
 
-void led_init (uint32_t pin_number);
-void led_on (uint32_t pin_number);
-void led_off (uint32_t pin_number);
-void led_toggle (uint32_t pin_number);
+#endif

@@ -4,13 +4,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "led.h"
-#include "board.h"
+#include "pins.h"
 #include "nordic_common.h"
 #include "app_timer.h"
 #include "softdevice_handler.h"
+#include "pressure.h"
 
 
-#define LED            LED_0
+#define LED            LED_1
 
 // Some constants about timers
 #define BLINK_TIMER_PRESCALER              0                                  /**< Value of the RTC1 PRESCALER register. */
@@ -35,7 +36,7 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name) {
 
 // Timer callback
 static void timer_handler (void* p_context) {
-    led_toggle(LED);
+    ledToggle(LED);
 }
 
 // Setup timer
@@ -68,8 +69,9 @@ static void timer_start(void) {
 int main(void) {
 
     // Initialize.
-    led_init(LED);
-    led_off(LED);
+    ledInit(LED);
+    pressureInit();
+    ledOff(LED);
 
     // Need to set the clock to something
     SOFTDEVICE_HANDLER_INIT(NRF_CLOCK_LFCLKSRC_RC_250_PPM_8000MS_CALIBRATION, false);
