@@ -4,14 +4,23 @@ APPLICATION_SRCS = $(notdir $(wildcard ./*.c))
 APPLICATION_SRCS += softdevice_handler.c
 APPLICATION_SRCS += ble_debug_assert_handler.c
 APPLICATION_SRCS += ble_advdata.c
-#APPLICATION_SRCS += app_timer.c
-#APPLICATION_SRCS += app_scheduler.c
+APPLICATION_SRCS += bleApp.c
+APPLICATION_SRCS += app_timer.c
+APPLICATION_SRCS += app_scheduler.c
 APPLICATION_SRCS += led.c
 APPLICATION_SRCS += lps25h.c
 APPLICATION_SRCS += battery.c
 APPLICATION_SRCS += lmp91000.c
 APPLICATION_SRCS += twi_hw_master.c
 APPLICATION_SRCS += adc.c
+APPLICATION_SRCS += ble_conn_params.c
+APPLICATION_SRCS += app_error.c
+APPLICATION_SRCS += app_util_platform.c
+APPLICATION_SRCS += ble_co.c
+APPLICATION_SRCS += ble_auth.c
+APPLICATION_SRCS += ble_bas.c
+APPLICATION_SRCS += ble_srv_common.c
+
 
 
 SOFTDEVICE = $(HOME)/Programs/Nordic/softdevices/s110/s110_nrf51822_7.1.0_softdevice.hex

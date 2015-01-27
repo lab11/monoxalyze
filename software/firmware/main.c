@@ -1,6 +1,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 #include "nordic_common.h"
 #include "pins.h"
 #include "nrf.h"
@@ -15,9 +16,9 @@ int main(void)
 {
     // Initialize
 	bleInit(sleep);
-	ledInit();
-	gasInit();
-	pressureInit();
+	//ledInit();
+	//gasInit();
+	//pressureInit();
 
     advertisingStart();
 
