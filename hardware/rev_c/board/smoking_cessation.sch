@@ -953,6 +953,7 @@ the functionality of your wireless devices.</description>
 </devices>
 </deviceset>
 <deviceset name="TPS715AXX">
+<description>80ma LDO Regulator. Very low quiescent current. Always active.</description>
 <gates>
 <gate name="G$1" symbol="TPS715AXX" x="0" y="0"/>
 </gates>
@@ -964,7 +965,9 @@ the functionality of your wireless devices.</description>
 <connect gate="G$1" pin="OUT" pad="6"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DIGIKEY" value="TPS715A33DRVR" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -2725,14 +2728,79 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <library name="gas-sensor">
 <description>LAB11 - Electrochemical gas sensors</description>
 <packages>
-<package name="SPEC">
-<wire x1="-7.5" y1="-7.5" x2="-7.5" y2="7.5" width="0.127" layer="21"/>
-<wire x1="-7.5" y1="7.5" x2="7.5" y2="7.5" width="0.127" layer="21"/>
-<wire x1="7.5" y1="7.5" x2="7.5" y2="-7.5" width="0.127" layer="21"/>
-<wire x1="7.5" y1="-7.5" x2="-7.5" y2="-7.5" width="0.127" layer="21"/>
-<smd name="P$1" x="-5.5" y="0" dx="4" dy="3" layer="1"/>
-<smd name="P$2" x="0" y="5.5" dx="4" dy="3" layer="1" rot="R90"/>
-<smd name="P$3" x="5.5" y="0" dx="4" dy="3" layer="1" rot="R180"/>
+<package name="SPEC2">
+<wire x1="-8" y1="-2" x2="-8" y2="2" width="0.127" layer="20"/>
+<wire x1="-2" y1="8" x2="2" y2="8" width="0.127" layer="20"/>
+<wire x1="8" y1="2" x2="8" y2="-2" width="0.127" layer="20"/>
+<wire x1="2" y1="-8" x2="-2" y2="-8" width="0.127" layer="20"/>
+<circle x="0" y="0" radius="6.5" width="0.127" layer="21"/>
+<wire x1="-8" y1="2" x2="-2" y2="8" width="0.127" layer="20"/>
+<wire x1="-8" y1="-2" x2="-2" y2="-8" width="0.127" layer="20"/>
+<wire x1="2" y1="-8" x2="8" y2="-2" width="0.127" layer="20"/>
+<wire x1="2" y1="8" x2="8" y2="2" width="0.127" layer="20"/>
+<polygon width="0.127" layer="1">
+<vertex x="-7.8" y="2.6"/>
+<vertex x="-2.4" y="8"/>
+<vertex x="-8" y="8"/>
+<vertex x="-8" y="2.4"/>
+</polygon>
+<polygon width="0.127" layer="1">
+<vertex x="2.4" y="8"/>
+<vertex x="8" y="2.4"/>
+<vertex x="8" y="8"/>
+</polygon>
+<polygon width="0.127" layer="1">
+<vertex x="-8" y="-2.4"/>
+<vertex x="-2.4" y="-8"/>
+<vertex x="-8" y="-8"/>
+</polygon>
+<polygon width="0.127" layer="1">
+<vertex x="2.4" y="-8"/>
+<vertex x="8" y="-8"/>
+<vertex x="8" y="-2.4"/>
+</polygon>
+<pad name="C_1" x="-7.5" y="7.5" drill="0.3"/>
+<pad name="C_2" x="-6.4" y="7.5" drill="0.3"/>
+<pad name="C_3" x="-5.3" y="7.5" drill="0.3"/>
+<pad name="C_4" x="-4.2" y="7.5" drill="0.3"/>
+<pad name="C_5" x="-7.5" y="6.4" drill="0.3"/>
+<pad name="C_8" x="-7.5" y="5.3" drill="0.3"/>
+<pad name="C_10" x="-7.5" y="4.2" drill="0.3"/>
+<pad name="C_9" x="-6.4" y="5.3" drill="0.3"/>
+<pad name="C_6" x="-6.4" y="6.4" drill="0.3"/>
+<pad name="C_7" x="-5.3" y="6.4" drill="0.3"/>
+<pad name="W1_1" x="7.5" y="7.5" drill="0.3"/>
+<pad name="W1_2" x="6.4" y="7.5" drill="0.3"/>
+<pad name="W1_3" x="5.3" y="7.5" drill="0.3"/>
+<pad name="W1_4" x="4.2" y="7.5" drill="0.3"/>
+<pad name="W1_7" x="5.3" y="6.4" drill="0.3"/>
+<pad name="W1_6" x="6.4" y="6.4" drill="0.3"/>
+<pad name="W1_5" x="7.5" y="6.4" drill="0.3"/>
+<pad name="W1_8" x="7.5" y="5.3" drill="0.3"/>
+<pad name="W1_9" x="6.4" y="5.3" drill="0.3"/>
+<pad name="W1_10" x="7.5" y="4.2" drill="0.3"/>
+<pad name="R_1" x="-7.5" y="-7.5" drill="0.3"/>
+<pad name="R_2" x="-6.4" y="-7.5" drill="0.3"/>
+<pad name="R_7" x="-7.5" y="-6.4" drill="0.3"/>
+<pad name="R_3" x="-5.3" y="-7.5" drill="0.3"/>
+<pad name="R_4" x="-4.1" y="-7.5" drill="0.3"/>
+<pad name="R_5" x="-5.3" y="-6.4" drill="0.3"/>
+<pad name="R_6" x="-6.4" y="-6.4" drill="0.3"/>
+<pad name="R_9" x="-7.5" y="-5.3" drill="0.3"/>
+<pad name="R_8" x="-6.4" y="-5.3" drill="0.3"/>
+<pad name="R_10" x="-7.5" y="-4.2" drill="0.3"/>
+<pad name="W2_1" x="7.5" y="-7.5" drill="0.3"/>
+<pad name="W2_2" x="6.4" y="-7.5" drill="0.3"/>
+<pad name="W2_3" x="5.3" y="-7.5" drill="0.3"/>
+<pad name="W2_4" x="4.2" y="-7.5" drill="0.3"/>
+<pad name="W2_5" x="7.5" y="-6.4" drill="0.3"/>
+<pad name="W2_6" x="6.4" y="-6.4" drill="0.3"/>
+<pad name="W2_7" x="5.3" y="-6.4" drill="0.3"/>
+<pad name="W2_9" x="6.4" y="-5.3" drill="0.3"/>
+<pad name="W2_8" x="7.5" y="-5.3" drill="0.3"/>
+<pad name="W2_10" x="7.5" y="-4.2" drill="0.3"/>
+<circle x="9.1" y="-6.9" radius="0.316225" width="0.127" layer="21"/>
+<text x="-7.6" y="9.1" size="1.27" layer="25">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
@@ -2746,9 +2814,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pin name="C" x="15.24" y="-7.62" length="middle" rot="R180"/>
 <text x="-7.62" y="-5.08" size="1.778" layer="95">GAS</text>
 <text x="-7.62" y="-7.62" size="1.778" layer="95">SENSOR</text>
-<text x="-7.62" y="7.62" size="1.778" layer="95">Wearnes</text>
-<text x="-7.62" y="5.08" size="1.778" layer="95">Cambion</text>
-<text x="-7.62" y="2.54" size="1.778" layer="95">450-3326</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -2757,11 +2822,11 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <gate name="G$1" symbol="3E" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="SPEC">
+<device name="" package="SPEC2">
 <connects>
-<connect gate="G$1" pin="C" pad="P$1"/>
-<connect gate="G$1" pin="R" pad="P$2"/>
-<connect gate="G$1" pin="W" pad="P$3"/>
+<connect gate="G$1" pin="C" pad="C_1 C_2 C_3 C_4 C_5 C_6 C_7 C_8 C_9 C_10"/>
+<connect gate="G$1" pin="R" pad="R_1 R_2 R_3 R_4 R_5 R_6 R_7 R_8 R_9 R_10"/>
+<connect gate="G$1" pin="W" pad="W1_1 W1_2 W1_3 W1_4 W1_5 W1_6 W1_7 W1_8 W1_9 W1_10 W2_1 W2_2 W2_3 W2_4 W2_5 W2_6 W2_7 W2_8 W2_9 W2_10"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -2926,6 +2991,9 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="C12" library="passives" deviceset="CAPACITOR" device="" value=".1"/>
 <part name="C13" library="passives" deviceset="CAPACITOR" device="" value=".47"/>
 <part name="R13" library="passives" deviceset="RESISTOR" device="0402_RES" value="700k"/>
+<part name="GND1" library="supply1" deviceset="GND" device=""/>
+<part name="C21" library="passives" deviceset="CAPACITOR" device="" value=".1uF"/>
+<part name="GND9" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3047,6 +3115,8 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <attribute name="DIGIKEY" x="66.04" y="78.74" size="1.27" layer="96" rot="R270" display="off"/>
 </instance>
 <instance part="GND15" gate="1" x="66.04" y="50.8"/>
+<instance part="GND1" gate="1" x="73.66" y="99.06"/>
+<instance part="GND9" gate="1" x="132.08" y="101.6"/>
 </instances>
 <busses>
 </busses>
@@ -3155,6 +3225,25 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="S1" gate="G$1" pin="P$1"/>
 <pinref part="GND15" gate="1" pin="GND"/>
 <wire x1="66.04" y1="55.88" x2="66.04" y2="53.34" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="P10"/>
+<wire x1="78.74" y1="106.68" x2="73.66" y2="106.68" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="106.68" x2="73.66" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="P11"/>
+<wire x1="78.74" y1="104.14" x2="73.66" y2="104.14" width="0.1524" layer="91"/>
+<wire x1="73.66" y1="104.14" x2="73.66" y2="101.6" width="0.1524" layer="91"/>
+<junction x="73.66" y="104.14"/>
+<pinref part="U1" gate="G$1" pin="P12"/>
+<wire x1="73.66" y1="101.6" x2="78.74" y2="101.6" width="0.1524" layer="91"/>
+<pinref part="GND1" gate="1" pin="GND"/>
+<junction x="73.66" y="101.6"/>
+</segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="P28"/>
+<pinref part="GND9" gate="1" pin="GND"/>
+<wire x1="124.46" y1="106.68" x2="132.08" y2="106.68" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="106.68" x2="132.08" y2="104.14" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -3572,6 +3661,10 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="C12" gate="G$1" x="-10.16" y="-27.94"/>
 <instance part="C13" gate="G$1" x="30.48" y="-27.94"/>
 <instance part="R13" gate="G$1" x="-93.98" y="35.56" rot="R90"/>
+<instance part="C21" gate="G$1" x="-20.32" y="-38.1" smashed="yes" rot="R180">
+<attribute name="NAME" x="-15.748" y="-33.147" size="1.778" layer="95" rot="R180"/>
+<attribute name="VALUE" x="-13.97" y="-38.481" size="1.778" layer="96" rot="R180"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -3674,6 +3767,10 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="R15" gate="G$1" pin="1"/>
 <wire x1="-35.56" y1="-43.18" x2="-27.94" y2="-43.18" width="0.1524" layer="91"/>
 <junction x="-35.56" y="-43.18"/>
+<pinref part="C21" gate="G$1" pin="1"/>
+<wire x1="-20.32" y1="-40.64" x2="-20.32" y2="-43.18" width="0.1524" layer="91"/>
+<wire x1="-20.32" y1="-43.18" x2="-27.94" y2="-43.18" width="0.1524" layer="91"/>
+<junction x="-27.94" y="-43.18"/>
 </segment>
 <segment>
 <pinref part="SUPPLY6" gate="1" pin="GND"/>
@@ -3929,7 +4026,10 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="R15" gate="G$1" pin="2"/>
 <wire x1="-27.94" y1="-33.02" x2="-20.32" y2="-33.02" width="0.1524" layer="91"/>
 <junction x="-27.94" y="-33.02"/>
-<label x="-20.32" y="-33.02" size="1.27" layer="95" rot="R270" xref="yes"/>
+<label x="-12.7" y="-33.02" size="1.27" layer="95" rot="R270" xref="yes"/>
+<pinref part="C21" gate="G$1" pin="2"/>
+<wire x1="-20.32" y1="-33.02" x2="-12.7" y2="-33.02" width="0.1524" layer="91"/>
+<junction x="-20.32" y="-33.02"/>
 </segment>
 </net>
 <net name="N$8" class="0">
