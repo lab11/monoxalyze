@@ -2738,67 +2738,66 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="-8" y1="-2" x2="-2" y2="-8" width="0.127" layer="20"/>
 <wire x1="2" y1="-8" x2="8" y2="-2" width="0.127" layer="20"/>
 <wire x1="2" y1="8" x2="8" y2="2" width="0.127" layer="20"/>
-<polygon width="0.127" layer="1">
-<vertex x="-7.8" y="2.6"/>
-<vertex x="-2.4" y="8"/>
+<polygon width="0.1524" layer="1">
+<vertex x="-8" y="3.3"/>
+<vertex x="-3.2" y="8"/>
 <vertex x="-8" y="8"/>
-<vertex x="-8" y="2.4"/>
 </polygon>
-<polygon width="0.127" layer="1">
-<vertex x="2.4" y="8"/>
-<vertex x="8" y="2.4"/>
+<polygon width="0.1524" layer="1">
+<vertex x="3.2" y="8"/>
+<vertex x="8" y="3.3"/>
 <vertex x="8" y="8"/>
 </polygon>
-<polygon width="0.127" layer="1">
-<vertex x="-8" y="-2.4"/>
-<vertex x="-2.4" y="-8"/>
+<polygon width="0.1524" layer="1">
+<vertex x="-8" y="-3.3"/>
+<vertex x="-3.3" y="-8"/>
 <vertex x="-8" y="-8"/>
 </polygon>
-<polygon width="0.127" layer="1">
-<vertex x="2.4" y="-8"/>
+<polygon width="0.1524" layer="1">
+<vertex x="3.3" y="-8"/>
 <vertex x="8" y="-8"/>
-<vertex x="8" y="-2.4"/>
+<vertex x="8" y="-3.2"/>
 </polygon>
 <pad name="C_1" x="-7.5" y="7.5" drill="0.3"/>
-<pad name="C_2" x="-6.4" y="7.5" drill="0.3"/>
-<pad name="C_3" x="-5.3" y="7.5" drill="0.3"/>
-<pad name="C_4" x="-4.2" y="7.5" drill="0.3"/>
-<pad name="C_5" x="-7.5" y="6.4" drill="0.3"/>
-<pad name="C_8" x="-7.5" y="5.3" drill="0.3"/>
-<pad name="C_10" x="-7.5" y="4.2" drill="0.3"/>
-<pad name="C_9" x="-6.4" y="5.3" drill="0.3"/>
-<pad name="C_6" x="-6.4" y="6.4" drill="0.3"/>
-<pad name="C_7" x="-5.3" y="6.4" drill="0.3"/>
+<pad name="C_2" x="-6.5" y="7.5" drill="0.3"/>
+<pad name="C_3" x="-5.5" y="7.5" drill="0.3"/>
+<pad name="C_4" x="-4.5" y="7.5" drill="0.3"/>
+<pad name="C_5" x="-7.5" y="6.5" drill="0.3"/>
+<pad name="C_8" x="-7.5" y="5.5" drill="0.3"/>
+<pad name="C_10" x="-7.5" y="4.5" drill="0.3"/>
+<pad name="C_9" x="-6.5" y="5.5" drill="0.3"/>
+<pad name="C_6" x="-6.5" y="6.5" drill="0.3"/>
+<pad name="C_7" x="-5.5" y="6.5" drill="0.3"/>
 <pad name="W1_1" x="7.5" y="7.5" drill="0.3"/>
-<pad name="W1_2" x="6.4" y="7.5" drill="0.3"/>
-<pad name="W1_3" x="5.3" y="7.5" drill="0.3"/>
-<pad name="W1_4" x="4.2" y="7.5" drill="0.3"/>
-<pad name="W1_7" x="5.3" y="6.4" drill="0.3"/>
-<pad name="W1_6" x="6.4" y="6.4" drill="0.3"/>
-<pad name="W1_5" x="7.5" y="6.4" drill="0.3"/>
-<pad name="W1_8" x="7.5" y="5.3" drill="0.3"/>
-<pad name="W1_9" x="6.4" y="5.3" drill="0.3"/>
-<pad name="W1_10" x="7.5" y="4.2" drill="0.3"/>
+<pad name="W1_2" x="6.5" y="7.5" drill="0.3"/>
+<pad name="W1_3" x="5.5" y="7.5" drill="0.3"/>
+<pad name="W1_4" x="4.5" y="7.5" drill="0.3"/>
+<pad name="W1_7" x="5.5" y="6.5" drill="0.3"/>
+<pad name="W1_6" x="6.5" y="6.5" drill="0.3"/>
+<pad name="W1_5" x="7.5" y="6.5" drill="0.3"/>
+<pad name="W1_8" x="7.5" y="5.5" drill="0.3"/>
+<pad name="W1_9" x="6.5" y="5.5" drill="0.3"/>
+<pad name="W1_10" x="7.5" y="4.5" drill="0.3"/>
 <pad name="R_1" x="-7.5" y="-7.5" drill="0.3"/>
-<pad name="R_2" x="-6.4" y="-7.5" drill="0.3"/>
-<pad name="R_7" x="-7.5" y="-6.4" drill="0.3"/>
-<pad name="R_3" x="-5.3" y="-7.5" drill="0.3"/>
-<pad name="R_4" x="-4.1" y="-7.5" drill="0.3"/>
-<pad name="R_5" x="-5.3" y="-6.4" drill="0.3"/>
-<pad name="R_6" x="-6.4" y="-6.4" drill="0.3"/>
-<pad name="R_9" x="-7.5" y="-5.3" drill="0.3"/>
-<pad name="R_8" x="-6.4" y="-5.3" drill="0.3"/>
-<pad name="R_10" x="-7.5" y="-4.2" drill="0.3"/>
+<pad name="R_2" x="-6.5" y="-7.5" drill="0.3"/>
+<pad name="R_7" x="-7.5" y="-6.5" drill="0.3"/>
+<pad name="R_3" x="-5.5" y="-7.5" drill="0.3"/>
+<pad name="R_4" x="-4.5" y="-7.5" drill="0.3"/>
+<pad name="R_5" x="-5.5" y="-6.5" drill="0.3"/>
+<pad name="R_6" x="-6.5" y="-6.5" drill="0.3"/>
+<pad name="R_9" x="-7.5" y="-5.5" drill="0.3"/>
+<pad name="R_8" x="-6.5" y="-5.5" drill="0.3"/>
+<pad name="R_10" x="-7.5" y="-4.5" drill="0.3"/>
 <pad name="W2_1" x="7.5" y="-7.5" drill="0.3"/>
-<pad name="W2_2" x="6.4" y="-7.5" drill="0.3"/>
-<pad name="W2_3" x="5.3" y="-7.5" drill="0.3"/>
-<pad name="W2_4" x="4.2" y="-7.5" drill="0.3"/>
-<pad name="W2_5" x="7.5" y="-6.4" drill="0.3"/>
-<pad name="W2_6" x="6.4" y="-6.4" drill="0.3"/>
-<pad name="W2_7" x="5.3" y="-6.4" drill="0.3"/>
-<pad name="W2_9" x="6.4" y="-5.3" drill="0.3"/>
-<pad name="W2_8" x="7.5" y="-5.3" drill="0.3"/>
-<pad name="W2_10" x="7.5" y="-4.2" drill="0.3"/>
+<pad name="W2_2" x="6.5" y="-7.5" drill="0.3"/>
+<pad name="W2_3" x="5.5" y="-7.5" drill="0.3"/>
+<pad name="W2_4" x="4.5" y="-7.5" drill="0.3"/>
+<pad name="W2_5" x="7.5" y="-6.5" drill="0.3"/>
+<pad name="W2_6" x="6.5" y="-6.5" drill="0.3"/>
+<pad name="W2_7" x="5.5" y="-6.5" drill="0.3"/>
+<pad name="W2_9" x="6.5" y="-5.5" drill="0.3"/>
+<pad name="W2_8" x="7.5" y="-5.5" drill="0.3"/>
+<pad name="W2_10" x="7.5" y="-4.5" drill="0.3"/>
 <circle x="9.1" y="-6.9" radius="0.316225" width="0.127" layer="21"/>
 <text x="-7.6" y="9.1" size="1.27" layer="25">&gt;NAME</text>
 </package>
@@ -2994,6 +2993,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
 <part name="C21" library="passives" deviceset="CAPACITOR" device="" value=".1uF"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
+<part name="GND16" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3117,6 +3117,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="GND15" gate="1" x="66.04" y="50.8"/>
 <instance part="GND1" gate="1" x="73.66" y="99.06"/>
 <instance part="GND9" gate="1" x="132.08" y="101.6"/>
+<instance part="GND16" gate="1" x="129.54" y="134.62"/>
 </instances>
 <busses>
 </busses>
@@ -3244,6 +3245,11 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="GND9" gate="1" pin="GND"/>
 <wire x1="124.46" y1="106.68" x2="132.08" y2="106.68" width="0.1524" layer="91"/>
 <wire x1="132.08" y1="106.68" x2="132.08" y2="104.14" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U1" gate="G$1" pin="P17"/>
+<wire x1="124.46" y1="137.16" x2="129.54" y2="137.16" width="0.1524" layer="91"/>
+<pinref part="GND16" gate="1" pin="GND"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -3594,6 +3600,13 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="U1" gate="G$1" pin="P15"/>
 <wire x1="78.74" y1="93.98" x2="76.2" y2="93.98" width="0.1524" layer="91"/>
 <label x="76.2" y="93.98" size="1.27" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="N$23" class="0">
+<segment>
+<pinref part="U1" gate="G$1" pin="P30"/>
+<wire x1="124.46" y1="101.6" x2="127" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="127" y1="101.6" x2="127" y2="99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
