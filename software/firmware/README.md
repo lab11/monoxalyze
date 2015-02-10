@@ -25,6 +25,9 @@ Install the Application
 1. Make sure the path to the SDK is set correctly in the application
 makefile (or override it in your environment).
 
+1. Make sure your SDK version is set correctly in the application makefile
+(currently support version 6 and version 7)
+
 1. Just once you need to load the soft device onto the nRF51822. Make sure
 the SOFTDEVICE is set correctly in the Makefile then:
 

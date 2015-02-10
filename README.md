@@ -5,7 +5,7 @@ The smoking cessation project uses smartphones and low power sensors to
 provide a compliance mechanism for smoking cessation programs.
 
 In the United States alone, cigarette smoking is responsible for more than
-480,000 deaths each year. While over 68% of smokiner wish to quit smoking,
+480,000 deaths each year. While over 68% of smokers wish to quit smoking,
 less than 7% are successful. In response to this high failure rate, programs
 that offer incentives for smokers to quit have been proposed. Unfortunately,
 these programs depend on unreliable, self-reported data to determine a
@@ -18,7 +18,9 @@ smoking cessation program.
 
 We are building carbon monoxide meters that can discriminate between a smoker
 and a non-smoker by measuring CO in a person's breath. Our goal is to create
-devices that are small enough to carry in a pocket, and can be powered by
-a coin cell battery. These devices could then pair with a smartphone that 
+devices that are small enough to carry in a pocket. These devices could then 
+pair with a smartphone that 
 can process and report readings, while also identifying the user of the device.
+
+
 
