@@ -2817,6 +2817,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </symbols>
 <devicesets>
 <deviceset name="SPECSENSOR">
+<description>Three Electrod Gas Sensor</description>
 <gates>
 <gate name="G$1" symbol="3E" x="0" y="0"/>
 </gates>
@@ -2837,6 +2838,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </library>
 </libraries>
 <attributes>
+<attribute name="TITLE" value="MONOXALYZE"/>
 </attributes>
 <variantdefs>
 </variantdefs>
