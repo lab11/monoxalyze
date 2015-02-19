@@ -3,7 +3,7 @@
 #include "lps25h.h"
 #include "twi_master.h"
 
-#define ADDRESS     0xB8
+#define PRESS_ADDRESS     0xB8
 
 #define REF_P_XL    0x08
 #define REF_P_L     0x09
@@ -26,10 +26,13 @@
 #define RPDS_L          0x39
 #define RPDS_H          0x3A
 
+
 //initializes the pressure sensor to the above configuration
 uint8_t pressureInit() {
     twi_master_init();
     setPressureActive();
+
+	return 0;
 }
 
 //sets the interrupt pressure threshold in Pa
@@ -44,25 +47,29 @@ void setPressureReference(uint32_t p) {
 
 //returns differential pressure in Pa
 uint32_t getPressure(void) {
+
     //write to the slave address to the subbaddress
     //set MSB of subaddress to enable auto increment
-    uint8_t subAddress = PRESS_OUT_XL & 0x80;
-    twi_master_transfer(ADDRESS & 0x01, &subAddress, 1, false);
+    uint8_t subAddress[2] = {PRESS_OUT_XL | 0x80, 0x00};
+    twi_master_transfer(PRESS_ADDRESS, subAddress, 1, false);
 
     //read three sequential pressures
     uint8_t press[3];
-    twi_master_transfer(ADDRESS, press, 3, true);
+    twi_master_transfer(PRESS_ADDRESS | 0x01, press, 3, true);
 
     //calculate pressurea
-    uint32_t pressPa;
-    pressPa = (press[2] << 16) & (press[1] << 8) & press[0];
+    uint32_t pressPa = 0x00;
+    pressPa = (press[2] << 16) | (press[1] << 8) | press[0];
     
-    return (int32_t)(pressPa/40.96);
+    //return (int32_t)(pressPa/40.96);
+	return pressPa;
 }
 
 //sets sample rate to that necessary to take a breath sample
 //disables threshold interrupt
 void setPressureActive(void) {
+	uint8_t subAddress[2] = {CTRL_REG1, 0xA0};
+    twi_master_transfer(PRESS_ADDRESS, subAddress, 2, true);
 
 }
 
@@ -71,6 +78,8 @@ void setPressureActive(void) {
 void setPressureInactive(void) {
     //enables interrupt on high pressure
     //lowers ODR to 1hz
+	uint8_t subAddress[2] = {CTRL_REG1, 0x00};
+    twi_master_transfer(PRESS_ADDRESS, subAddress, 2, true);
 
 }
 

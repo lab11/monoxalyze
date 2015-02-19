@@ -14,6 +14,51 @@ static void on_disconnect(ble_co_t* co, ble_evt_t* ble_evt) {
 	co->conn_handle = BLE_CONN_HANDLE_INVALID;
 }
 
+static void on_gas_cccd_write(ble_co_t* co, ble_gatts_evt_write_t* evt_write) {
+
+	if(evt_write->len == 2) {
+		if(co->evt_handler != NULL) {
+
+			ble_co_evt_t evt;
+
+			if(ble_srv_is_notification_enabled(evt_write->data)) {
+				evt.evt_type = BLE_CO_EVT_NOTIFICATION_ENABLED;
+			} else {
+				evt.evt_type = BLE_CO_EVT_NOTIFICATION_DISABLED;
+			}
+
+			co->evt_handler(co, &evt);
+		}
+	}
+}
+
+static void on_press_cccd_write(ble_co_t* co, ble_gatts_evt_write_t* evt_write) {
+	if(evt_write->len == 2) {
+		if(co->evt_handler != NULL) {
+			ble_co_evt_t evt;
+
+			if(ble_srv_is_notification_enabled(evt_write->data)) {
+				evt.evt_type = BLE_CO_EVT_NOTIFICATION_ENABLED;
+			} else {
+				evt.evt_type = BLE_CO_EVT_NOTIFICATION_DISABLED;
+			}
+
+			co->evt_handler(co, &evt);
+		}
+	}
+}
+
+static void on_write(ble_co_t* co, ble_evt_t* ble_evt) {
+	ble_gatts_evt_write_t* evt_write = &ble_evt->evt.gatts_evt.params.write;
+
+	if(evt_write->handle == co->gas_char_handles.cccd_handle) {
+		on_gas_cccd_write(co, evt_write);
+	} else if (evt_write->handle == co->press_char_handles.cccd_handle) {
+		on_press_cccd_write(co, evt_write);
+	}
+
+}
+
 void ble_co_on_ble_evt(ble_co_t* co, ble_evt_t* ble_evt) {
 
 	switch(ble_evt->header.evt_id) {
@@ -23,6 +68,9 @@ void ble_co_on_ble_evt(ble_co_t* co, ble_evt_t* ble_evt) {
 		case BLE_GAP_EVT_DISCONNECTED:
 			on_disconnect(co, ble_evt);
 			break;
+		case BLE_GATTS_EVT_WRITE:
+			on_write(co, ble_evt);
+			break;
 		default:
 			break;
 	}
@@ -30,7 +78,8 @@ void ble_co_on_ble_evt(ble_co_t* co, ble_evt_t* ble_evt) {
 
 
 
-static uint32_t gas_char_add(ble_co_t* co) {
+static uint32_t gas_char_add(ble_co_t* co, const ble_co_init_t * co_init) {
+
 	ble_gatts_char_md_t char_md;
 	ble_gatts_attr_md_t cccd_md;
 	ble_gatts_attr_t 	attr_char_value;
@@ -40,8 +89,7 @@ static uint32_t gas_char_add(ble_co_t* co) {
 	memset(&cccd_md, 0, sizeof(cccd_md));
 
 	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
-	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
-
+	cccd_md.write_perm = co_init->co_gas_attr_md.cccd_write_perm;
 	cccd_md.vloc = BLE_GATTS_VLOC_STACK;
 
 	char_md.char_props.read = 1;
@@ -63,7 +111,7 @@ static uint32_t gas_char_add(ble_co_t* co) {
 	attr_md.vloc		= BLE_GATTS_VLOC_STACK;
 	attr_md.rd_auth    = 0;
     attr_md.wr_auth    = 0;
-	attr_md.vlen       = 0;
+	attr_md.vlen       = 1;
 
 	memset(&attr_char_value, 0, sizeof(attr_char_value));
 
@@ -79,7 +127,7 @@ static uint32_t gas_char_add(ble_co_t* co) {
 														&co->gas_char_handles);
 }
 
-static uint32_t press_char_add(ble_co_t* co) {
+static uint32_t press_char_add(ble_co_t* co, ble_co_init_t* co_init) {
 	ble_gatts_char_md_t char_md;
 	ble_gatts_attr_md_t cccd_md;
 	ble_gatts_attr_t 	attr_char_value;
@@ -90,7 +138,7 @@ static uint32_t press_char_add(ble_co_t* co) {
 
 	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
 	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
-
+	cccd_md.write_perm = co_init->co_gas_attr_md.cccd_write_perm;
 	cccd_md.vloc = BLE_GATTS_VLOC_STACK;
 
 	char_md.char_props.read = 1;
@@ -128,7 +176,7 @@ static uint32_t press_char_add(ble_co_t* co) {
 														&co->press_char_handles);
 }
 
-uint32_t ble_co_init(ble_co_t* co) {
+uint32_t ble_co_init(ble_co_t* co, const ble_co_init_t* co_init) {
 	uint32_t err_code;
 	ble_uuid_t ble_uuid;
 
@@ -149,12 +197,12 @@ uint32_t ble_co_init(ble_co_t* co) {
 		return err_code;
 	}
 
-	err_code = gas_char_add(co);
+	err_code = gas_char_add(co, co_init);
 	if(err_code != NRF_SUCCESS) {
 		return err_code;
 	}
 
-	err_code = press_char_add(co);
+	err_code = press_char_add(co, co_init);
 	if(err_code != NRF_SUCCESS) {
 		return err_code;
 	}

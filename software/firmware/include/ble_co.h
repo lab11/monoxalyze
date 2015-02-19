@@ -1,6 +1,7 @@
 #ifndef BLE_CO_H
 #define BLE_CO_H
 
+
 #include <stdint.h>
 #include <stdbool.h>
 #include "ble.h"
@@ -11,9 +12,30 @@
 #define CO_UUID_GAS_CHAR 0x1525
 #define CO_UUID_PRESS_CHAR 0x1524
 
+typedef enum {
+	BLE_CO_EVT_NOTIFICATION_ENABLED,
+    BLE_CO_EVT_NOTIFICATION_DISABLED
+} ble_co_evt_type_t;
+
+typedef struct
+{
+    ble_co_evt_type_t evt_type;
+} ble_co_evt_t;
+
 typedef struct ble_co_s ble_co_t;
 
+typedef void (*ble_co_evt_handler_t) (ble_co_t* co, ble_co_evt_t* evt);
+
+
+typedef struct {
+	ble_co_evt_handler_t			evt_handler;
+	ble_srv_cccd_security_mode_t	co_gas_attr_md;
+	ble_srv_cccd_security_mode_t	co_press_attr_md;
+} ble_co_init_t;
+
+
 typedef struct ble_co_s {
+	ble_co_evt_handler_t		evt_handler;
 	uint16_t					service_handle;
 	ble_gatts_char_handles_t	gas_char_handles;
 	ble_gatts_char_handles_t	press_char_handles;
@@ -23,11 +45,11 @@ typedef struct ble_co_s {
 	bool						is_press_notifying;
 } ble_co_t;
 
-uint32_t ble_co_init(ble_co_t* co);
+uint32_t 	ble_co_init(ble_co_t* co, const ble_co_init_t* co_init);
+void 		ble_co_on_ble_evt(ble_co_t* co, ble_evt_t* ble_evt);
+uint32_t 	ble_co_on_gas_change(ble_co_t* co, uint32_t gas);
+uint32_t 	ble_co_on_press_change(ble_co_t* co, uint32_t press);
 
-void ble_co_on_ble_evt(ble_co_t* co, ble_evt_t* ble_evt);
 
-uint32_t ble_co_on_gas_change(ble_co_t* co, uint32_t gas);
-uint32_t ble_co_on_press_changle(ble_co_t* co, uint32_t press);
 
 #endif

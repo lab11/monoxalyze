@@ -3,7 +3,7 @@
 #include "adc.h"
 
 
-uint16_t getSample() {
+uint32_t getSample() {
     NRF_ADC->TASKS_START = 1;
 
     while(!NRF_ADC->EVENTS_END);

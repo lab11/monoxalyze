@@ -15,22 +15,25 @@
 #include "app_timer.h"
 #include "bleConfig.h"
 #include "ble_co.h"
-#include "ble_bas.h"
-#include "ble_auth.h"
+#include "lmp91000.h"
+#include "lps25h.h"
+//#include "ble_bas.h"
+//#include "ble_auth.h"
 
 //module-private variable declarations
 
 //Security requirements for this application.
 static ble_gap_sec_params_t             m_sec_params;
 //current connection handle
-static uint16_t 	m_conn_handle = BLE_CONN_HANDLE_INVALID; 
-static ble_co_t		m_co;
-static ble_auth_t	m_auth;
-static ble_bas_t	m_bas;
-static ble_bas_init_t m_bas_init;
+static uint16_t 		m_conn_handle = BLE_CONN_HANDLE_INVALID; 
+static ble_co_t			m_co;
+//static ble_auth_t	m_auth;
+//static ble_bas_t	m_bas;
+//static ble_bas_init_t m_bas_init;
 
 static ble_advdata_t advdata;
 static ble_gap_adv_params_t m_adv_params;
+static app_timer_id_t notifyTimer;
 
 #define APP_BEACON_INFO_LENGTH 	0x09
 
@@ -54,6 +57,7 @@ static uint8_t m_beacon_info[APP_BEACON_INFO_LENGTH] =
 void assert_nrf_callback(uint16_t, const uint8_t*);
 static void service_error_handler(uint32_t);
 static void timers_init(void);
+static void timer_start(void);
 static void gap_params_init(void);
 static void services_init(void);
 static void sec_params_init(void);
@@ -65,12 +69,12 @@ static void on_ble_evt(ble_evt_t * p_ble_evt);
 static void advertising_init(void);
 static void conn_params_init(void);
 
-void protocol_write_handler(ble_auth_t* auth, uint8_t protocol);
-void len_write_handler(ble_auth_t* auth, uint16_t len);
-void data_write_handler(ble_auth_t* auth, uint8_t* dataArray);
-void start_write_handler(ble_auth_t* auth, uint8_t start);
-void pass_write_handler(ble_auth_t* auth, uint8_t pass);
-void retry_write_handler(ble_auth_t* auth, uint8_t retry);
+//void protocol_write_handler(ble_auth_t* auth, uint8_t protocol);
+//void len_write_handler(ble_auth_t* auth, uint16_t len);
+//void data_write_handler(ble_auth_t* auth, uint8_t* dataArray);
+//void start_write_handler(ble_auth_t* auth, uint8_t start);
+//void pass_write_handler(ble_auth_t* auth, uint8_t pass);
+//void retry_write_handler(ble_auth_t* auth, uint8_t retry);
 
 //global function implementation
 void bleService(void) {
@@ -87,6 +91,7 @@ void bleInit(void (*sleepfunc)(void)) {
     services_init();
     conn_params_init();
     sec_params_init();
+	timer_start();
 }
 
 void advertisingStart(void) {
@@ -116,26 +121,18 @@ static void service_error_handler(uint32_t nrf_error)
 static void advertising_init(void)
 {
     uint32_t      err_code;
-    //uint8_t       flags = BLE_GAP_ADV_FLAGS_LE_ONLY_LIMITED_DISC_MODE;
-    //uint8_t       flags =  BLE_GAP_ADV_FLAG_BR_EDR_NOT_SUPPORTED;
-    uint8_t       flags =  BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+    uint8_t       flags =  BLE_GAP_ADV_FLAG_BR_EDR_NOT_SUPPORTED;
 
-	//ble_advdata_manuf_data_t manuf_specific_data;
 
-	//manuf_specific_data.company_identifier 		= APP_COMPANY_IDENTIFIER;
-	//manuf_specific_data.data.p_data 			= (uint8_t*) m_beacon_info;
-	//manuf_specific_data.data.size 				= APP_BEACON_INFO_LENGTH;
-
-    //ble_uuid_t adv_uuids[] = {{CO_UUID_SERVICE, m_co.uuid_type}, 
-	//						{BLE_UUID_BATTERY_SERVICE, BLE_UUID_TYPE_BLE}};
+    //ble_uuid_t adv_uuids[] = {{CO_UUID_SERVICE, m_co.uuid_type}}; 
 
     // Build and set advertising data
     memset(&advdata, 0, sizeof(advdata));
 
     advdata.name_type               = BLE_ADVDATA_FULL_NAME;
+	advdata.include_appearance		= true;
     advdata.flags.size              = sizeof(flags);
     advdata.flags.p_data            = &flags;
-	//advdata.p_manuf_specific_data	= &manuf_specific_data;
     //advdata.uuids_complete.uuid_cnt = sizeof(adv_uuids) / sizeof(adv_uuids[0]);
     //advdata.uuids_complete.p_uuids  = adv_uuids;
 
@@ -152,17 +149,27 @@ static void advertising_init(void)
 }
 
 //initialize timers
+
+void notifyHandler(void* p_context) {
+	static uint32_t i = 0;
+	ble_co_on_gas_change(&m_co, getPPM());
+	ble_co_on_press_change(&m_co, getPressure());
+}
+
 static void timers_init(void)
 {
     // Initialize timer module, making it use the scheduler
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, true);
+    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
 
-    /* YOUR_JOB: Create any timers to be used by the application.
-                 Below is an example of how to create a timer.
-                 For every new timer needed, increase the value of the macro APP_TIMER_MAX_TIMERS by
-                 one.
-    err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
-    APP_ERROR_CHECK(err_code); */
+    
+	uint32_t err_code = app_timer_create(&notifyTimer, APP_TIMER_MODE_REPEATED, notifyHandler);
+    APP_ERROR_CHECK(err_code); 
+}
+
+static void timer_start(void)
+{
+	uint32_t err_code = app_timer_start(notifyTimer, NOTIFY_RATE, NULL);
+	APP_ERROR_CHECK(err_code);
 }
 
 
@@ -201,23 +208,36 @@ static void gap_params_init(void)
 static void services_init(void)
 {
 	uint32_t err_code;
+	ble_co_init_t co_init;
 
-	err_code = ble_co_init(&m_co);
+	memset(&co_init, 0, sizeof(co_init));
+
+	co_init.evt_handler = NULL;
+
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&co_init.co_gas_attr_md.cccd_write_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_gas_attr_md.read_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_gas_attr_md.write_perm);
+
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&co_init.co_press_attr_md.cccd_write_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_press_attr_md.read_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_press_attr_md.write_perm);
+
+	err_code = ble_co_init(&m_co, &co_init);
 	APP_ERROR_CHECK(err_code);
 
-	ble_auth_init_t authInit;
+	/*ble_auth_init_t authInit;
 	authInit.protocol_write_handler = protocol_write_handler;
 	authInit.len_write_handler 		= len_write_handler;
 	authInit.data_write_handler 	= data_write_handler;
 	authInit.start_write_handler 	= start_write_handler;
 	authInit.pass_write_handler 	= pass_write_handler;
-	authInit.retry_write_handler 	= retry_write_handler;
+	authInit.retry_write_handler 	= retry_write_handler;*/
 
-	err_code = ble_auth_init(&m_auth, &authInit);
-	APP_ERROR_CHECK(err_code);
+	//err_code = ble_auth_init(&m_auth, &authInit);
+	//APP_ERROR_CHECK(err_code);
 
-	err_code = ble_bas_init(&m_bas, &m_bas_init);
-	APP_ERROR_CHECK(err_code);
+	//err_code = ble_bas_init(&m_bas, &m_bas_init);
+	//APP_ERROR_CHECK(err_code);
 }
 
 
@@ -273,15 +293,6 @@ static void conn_params_init(void)
 }
 
 
-static void timers_start(void)
-{
-    /* YOUR_JOB: Start your timers. below is an example of how to start a timer.
-    uint32_t err_code;
-
-    err_code = app_timer_start(m_app_timer_id, TIMER_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code); */
-}
-
 
 //ble event callback
 static void on_ble_evt(ble_evt_t * p_ble_evt)
@@ -299,9 +310,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
 
         case BLE_GAP_EVT_DISCONNECTED:
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
-
-            
-            //advertising_start();
+            advertisingStart();
             break;
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -337,9 +346,10 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
         case BLE_GAP_EVT_TIMEOUT:
             if (p_ble_evt->evt.gap_evt.params.timeout.src == BLE_GAP_TIMEOUT_SRC_ADVERTISEMENT)
             {
-                err_code = sd_power_system_off();
-                APP_ERROR_CHECK(err_code);
+                //err_code = sd_power_system_off();
+                //APP_ERROR_CHECK(err_code);
             }
+			advertisingStart();
             break;
         default:
             break;
@@ -358,6 +368,8 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     YOUR_JOB: Add service ble_evt handlers calls here, like, for example:
     ble_bas_on_ble_evt(&m_bas, p_ble_evt);
     */
+
+	ble_co_on_ble_evt(&m_co, p_ble_evt);
 }
 
 
@@ -387,12 +399,12 @@ static void ble_stack_init(void)
     APP_ERROR_CHECK(err_code);
     
     // Register with the SoftDevice handler module for BLE events.
-    //err_code = softdevice_ble_evt_handler_set(ble_evt_dispatch);
-    //APP_ERROR_CHECK(err_code);
+    err_code = softdevice_ble_evt_handler_set(ble_evt_dispatch);
+    APP_ERROR_CHECK(err_code);
     
     // Register with the SoftDevice handler module for BLE events.
-    //err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
-    //APP_ERROR_CHECK(err_code);
+    err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
+    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -408,6 +420,7 @@ static void power_manage(void)
     APP_ERROR_CHECK(err_code);
 }
 
+/*
 void protocol_write_handler(ble_auth_t* auth, uint8_t protocol){
 
 }
@@ -425,5 +438,5 @@ void pass_write_handler(ble_auth_t* auth, uint8_t pass){
 }
 void retry_write_handler(ble_auth_t* auth, uint8_t retry){
 
-}
+}*/
 

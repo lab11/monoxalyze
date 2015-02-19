@@ -18,10 +18,10 @@ uint32_t getPressure(void);
 
 //sets sample rate to that necessary to take a breath sample
 //disables threshold interrupt
-void setActive(void);
+void setPressureActive(void);
 
 //sets sample rate to that necessary for Nordic to sleep and
 //enables the threshold interrupt
-void setInactive(void);
+void setPressureInactive(void);
 
 #endif

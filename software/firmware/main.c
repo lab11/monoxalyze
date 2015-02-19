@@ -16,11 +16,18 @@ int main(void)
 {
     // Initialize
 	bleInit(sleep);
-	//ledInit();
-	//gasInit();
-	//pressureInit();
-
     advertisingStart();
+	ledInit();
+	ledOn(LED_1);
+	gasInit();
+	pressureInit();
+
+	//if(gasInit())
+		//ledOn(LED_1);
+	//else
+		//ledOn(LED_2);
+
+
 
     // Enter main loop
     while(true);

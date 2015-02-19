@@ -25,6 +25,8 @@
 //size of op queues
 #define APP_TIMER_OP_QUEUE_SIZE         4
 
+#define NOTIFY_RATE						APP_TIMER_TICKS(300, APP_TIMER_PRESCALER)
+
 //500ms
 #define MIN_CONN_INTERVAL               MSEC_TO_UNITS(500, UNIT_1_25_MS)
 

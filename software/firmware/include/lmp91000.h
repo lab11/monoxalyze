@@ -2,9 +2,9 @@
 #define LMP91000_H
 
 uint8_t gasInit();
-uint16_t getPPM();
+uint32_t getPPM();
 uint16_t getTemp();
-void setGasActive();
-void setGasInactive();
+uint8_t setGasActive();
+uint8_t setGasInactive();
 
 #endif
