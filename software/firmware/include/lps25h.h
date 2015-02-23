@@ -15,6 +15,7 @@ void setPressureReference(uint32_t);
 
 //returns differential pressure in Pa
 uint32_t getPressure(void);
+uint16_t getTemp(void);
 
 //sets sample rate to that necessary to take a breath sample
 //disables threshold interrupt

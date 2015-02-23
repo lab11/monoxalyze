@@ -15,12 +15,13 @@ void sleep(void);
 int main(void)
 {
     // Initialize
+	gasInit(); 
+	pressureInit();
 	bleInit(sleep);
     advertisingStart();
-	ledInit();
-	ledOn(LED_1);
-	gasInit();
-	pressureInit();
+//	ledInit();
+//	ledOn(LED_1);
+	
 
 	//if(gasInit())
 		//ledOn(LED_1);

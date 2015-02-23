@@ -41,11 +41,11 @@ else
 	SDK_PATH ?= $(HOME)/Programs/Nordic/sdk/nrf51822/
 endif
 
-TEMPLATE_PATH ?= nrf51-pure-gcc-setup/template/
+TEMPLATE_PATH ?= ../../nrf51-pure-gcc-setup/template/
 
 
-LIBRARY_PATHS += include
-SOURCE_PATHS += src
+LIBRARY_PATHS += ../../include
+SOURCE_PATHS += ../../src
 
 CFLAGS += -Os
 GDB_PORT_NUMBER = 2331

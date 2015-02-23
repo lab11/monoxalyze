@@ -18,7 +18,9 @@
 #define STATUS_REG  0x27
 #define PRESS_OUT_XL   0x28
 #define PRESS_OUT_L     0x29
-#define PRESS_OuT_H     0x2A
+#define PRESS_OUT_H     0x2A
+#define TEMP_OUT_L		0x2B
+#define TEMP_OUT_H		0x2C
 #define FIFO_CTRL       0x2E
 #define FIFO_STATUS     0x2F
 #define THIS_P_L        0x30
@@ -49,6 +51,9 @@ void setPressureReference(uint32_t p) {
 uint32_t getPressure(void) {
 
     //write to the slave address to the subbaddress
+	uint8_t toWrite[2] = {CTRL_REG2, 0x11};
+	twi_master_transfer(PRESS_ADDRESS, toWrite, 2, true);
+
     //set MSB of subaddress to enable auto increment
     uint8_t subAddress[2] = {PRESS_OUT_XL | 0x80, 0x00};
     twi_master_transfer(PRESS_ADDRESS, subAddress, 1, false);
@@ -65,10 +70,29 @@ uint32_t getPressure(void) {
 	return pressPa;
 }
 
+uint16_t getTemp(void) {
+	uint8_t toWrite[2] = {CTRL_REG2, 0x11};
+	twi_master_transfer(PRESS_ADDRESS, toWrite, 2, true);
+
+    //set MSB of subaddress to enable auto increment
+    uint8_t subAddress[2] = {TEMP_OUT_L | 0x80, 0x00};
+    twi_master_transfer(PRESS_ADDRESS, subAddress, 1, false);
+
+    uint8_t temp[2];
+    twi_master_transfer(PRESS_ADDRESS | 0x01, temp, 2, true);
+
+    //calculate temp
+    uint16_t tempOut = 0x00;
+	tempOut = (temp[1] << 8) | temp[0];
+    
+	return tempOut;
+
+}
+
 //sets sample rate to that necessary to take a breath sample
 //disables threshold interrupt
 void setPressureActive(void) {
-	uint8_t subAddress[2] = {CTRL_REG1, 0xA0};
+	uint8_t subAddress[2] = {CTRL_REG1, 0x80};
     twi_master_transfer(PRESS_ADDRESS, subAddress, 2, true);
 
 }
