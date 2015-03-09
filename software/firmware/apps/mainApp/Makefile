@@ -20,6 +20,7 @@ APPLICATION_SRCS += ble_co.c
 APPLICATION_SRCS += ble_auth.c
 APPLICATION_SRCS += ble_bas.c
 APPLICATION_SRCS += ble_srv_common.c
+APPLICATION_SRCS += queue.c
 
 
 

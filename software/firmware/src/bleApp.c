@@ -17,6 +17,7 @@
 #include "ble_co.h"
 #include "lmp91000.h"
 #include "lps25h.h"
+#include "queue.h"
 //#include "ble_bas.h"
 //#include "ble_auth.h"
 
@@ -151,9 +152,19 @@ static void advertising_init(void)
 //initialize timers
 
 void notifyHandler(void* p_context) {
-	static uint32_t i = 0;
-	ble_co_on_gas_change(&m_co, getPPM());
-	ble_co_on_press_change(&m_co, getPressure());
+	static uint8_t i = 0;
+	static bool notifyPress = false;
+	queuePush(getGasSample());	
+	
+	if(!(i%10)) {
+		ble_co_on_gas_change(&m_co, convertSampleToPPM((uint32_t)queueAverage()));
+		//ble_co_on_press_change(&m_co, getPressure());
+		notifyPress = true;
+	} else if (notifyPress) {
+		ble_co_on_press_change(&m_co, getPressure());
+		notifyPress = false;
+	}
+	i++;
 }
 
 static void timers_init(void)

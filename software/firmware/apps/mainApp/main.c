@@ -21,18 +21,11 @@ int main(void)
     advertisingStart();
 //	ledInit();
 //	ledOn(LED_1);
-	
-
-	//if(gasInit())
-		//ledOn(LED_1);
-	//else
-		//ledOn(LED_2);
-
-
-
+	volatile int i = 0;	
     // Enter main loop
     while(true);
     {
+	//	i++;
 		bleService();
     }
 }
