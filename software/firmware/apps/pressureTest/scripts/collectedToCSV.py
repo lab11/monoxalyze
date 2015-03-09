@@ -1,40 +1,61 @@
-#!/usr/bin/env
+#!/usr/bin/python
+
+print("started")
 
 # open file
 inFile = open("collect.out", "r")
 outFile = open("collectOut.csv", "w")
 
+def toPa(pressure):
+	return pressure/40.96
+
+def toC(temp):
+	return temp/480.0 + 42.5000
+
+def strToInt(s):
+	i = int(s,16)
+	if (i >= 2**15):
+		i -= 2**16
+	return i
+
+
 #read to the start of memory we want
 line = inFile.readline()
-while(line[:7] != "00002000"):
+while(line[0:8] != "00002000"):
+	#print("read " + line[0:8])
 	line = inFile.readline()
 
 #we got to where we want - process to csv
-outFile.write("Pressure,Temperature")
+outFile.write("Pressure(pa),Temperature(C)\n")
 
 #first line
 initLine = line.split()
-currPress = int(initLine[2], 16)
+currPress = strToInt(initLine[2])
 
-currPress = currPress + int(initLine[3][:3],16)
-currTemp = int(initLine[3][4:7],16)
-outFile.write(str(currPress) + "," + str(currTemp))
-
-currPress = currPress + int(initLine[4][:3],16)
-currTemp = int(initLine[4][4:7],16)
-outFile.write(str(currPress) + "," + str(currTemp))
-
-currPress = currPress + int(initLine[5][:3],16)
-currTemp = int(initLine[5][4:7],16)
-outFile.write(str(currPress) + "," + str(currTemp))
+for i in range (3,6):
+	if(initLine[i] == "FFFFFFFF"):
+		outFile.write("na,na\n")
+	else:
+		currPress = currPress + strToInt(initLine[i][0:4])
+		currTemp = strToInt(initLine[i][4:8])
+		outFile.write(str(toPa(currPress)) + "," + str(toC(currTemp))+"\n")
 
 
-while(line != "" && line != "\n"):
+#print("processed first line")
+
+line = inFile.readline()
+
+while(line != "" and line != "\n"):
 	words = line.split()
 	for i in range(2,6):
-		currPress = currPress + int(initLine[i][:3],16)
-		currTemp = int(initLine[i][4:7],16)
-		outFile.write(str(currPress) + "," + str(currTemp))
+		if(words[i] == "FFFFFFFF"):
+			outFile.write("na,na\n")
+		else:
+			currPress = currPress + strToInt(words[i][0:4])
+			currTemp = strToInt(words[i][4:8])
+			outFile.write(str(toPa(currPress)) + "," + str(toC(currTemp))+"\n")
+
+	line = inFile.readline()
 
 inFile.close()
 outFile.close()
