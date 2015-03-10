@@ -47,8 +47,10 @@ for i in range (3,6):
 
 line = inFile.readline()
 
-while(line != "" and line != "\n"):
+while(line):
 	words = line.split()
+	if(words[0][0] != '0')
+		break
 	for i in range(2,6):
 		if(words[i] == "FFFFFFFF"):
 			outFile.write("na,na\n")
