@@ -37,6 +37,6 @@ collect: collect.jlink
 	JLinkExe collect.jlink > collect.out
 
 collect.jlink:
-	printf "r\nmem32 0 0x4000\nq" > collect.jlink
+	printf "r\nmem32 0 0x4000\nmem32 0x00010000 0x4000\nq" > collect.jlink
 
 include $(TEMPLATE_PATH)Makefile

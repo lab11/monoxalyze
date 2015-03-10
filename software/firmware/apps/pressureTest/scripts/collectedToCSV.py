@@ -2,9 +2,11 @@
 
 print("started")
 
+import sys
+
 # open file
-inFile = open("collect.out", "r")
-outFile = open("collectOut.csv", "w")
+inFile = open(sys.argv[1], "r")
+outFile = open(sys.argv[2], "w")
 
 def toPa(pressure):
 	return pressure/40.96
