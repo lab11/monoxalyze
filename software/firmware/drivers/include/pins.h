@@ -19,7 +19,7 @@
 #define SDA 8
 
 //p05
-#define PINT
+#define PINT 5
 
 //AIN5
 #define VOUT 5

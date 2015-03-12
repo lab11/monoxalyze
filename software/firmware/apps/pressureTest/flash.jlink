@@ -1,5 +1,0 @@
-r
-loadbin _build/pressureTest_blank.bin 00000000
-r
-g
-exit

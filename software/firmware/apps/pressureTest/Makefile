@@ -26,12 +26,19 @@ endif
 
 TEMPLATE_PATH ?= ../../nrf51-pure-gcc-setup/template/
 
-LIBRARY_PATHS += ../../include
+LIBRARY_PATHS += ../../drivers/include
+LIBRARY_PATHS += include
+LIBRARY_PATHS += ../../services
 LIBRARY_PATHS += .
+SOURCE_PATHS += ../../drivers/src
+SOURCE_PATHS += src
+SOURCE_PATHS += ../../services
 SOURCE_PATHS += ../../src
 
 CFLAGS += -Os
 GDB_PORT_NUMBER = 2331
+
+all: all
 
 collect: collect.jlink
 	JLinkExe collect.jlink > collect.out

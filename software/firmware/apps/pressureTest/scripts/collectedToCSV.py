@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-print("started")
-
 import sys
 
 # open file
@@ -49,11 +47,19 @@ line = inFile.readline()
 
 while(line):
 	words = line.split()
-	if(words[0][0] != '0')
-		break
+	if(not words):
+		line = inFile.readline()
+		continue
+	if(not words[0]):
+		line = inFile.readline()
+		continue
+	if(words[0][0] != '0'):
+		line = inFile.readline()
+		continue
 	for i in range(2,6):
 		if(words[i] == "FFFFFFFF"):
-			outFile.write("na,na\n")
+			pass
+			#outFile.write("na,na\n")
 		else:
 			currPress = currPress + strToInt(words[i][0:4])
 			currTemp = strToInt(words[i][4:8])

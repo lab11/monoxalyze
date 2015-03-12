@@ -52,6 +52,8 @@ for rebase in range(minRebase,maxRebase):
 
 			#iterate over the rebase time and see if you crossed the threshold
 			for start in range(pressure,pressure+rebase):
+				if(pressure+rebase > len(csvList)):
+					break
 				if (csvList[start][0] == "na"):
 					break
 				if (float(csvList[start][0]) - float(basePressure)) > delta:
@@ -63,6 +65,6 @@ for rebase in range(minRebase,maxRebase):
 
 		outFile.write(str(rebase) + " " + str(delta) + " " + str(falseWakeups) + "\n")
 		falseWakeups = 0
-
+	outFile.write("\n")
 
 

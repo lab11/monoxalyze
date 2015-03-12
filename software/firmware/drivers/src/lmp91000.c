@@ -73,7 +73,8 @@ uint32_t convertSampleToPPM(uint32_t sample) {
 }
 
 uint8_t setGasInactive() {
-    uint8_t down[2] = {MODECN, 0x00};
+	//fet short deep sleep
+    uint8_t down[2] = {MODECN, 0x80};
     return twi_master_transfer(GAS_ADDRESS, down, 2, true);
 }
 

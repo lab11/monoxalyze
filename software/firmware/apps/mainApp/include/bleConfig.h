@@ -15,7 +15,7 @@
 #define APP_COMPANY_IDENTIFIER			0x11BB
 
 //advertising timeout sec
-#define APP_ADV_TIMEOUT_IN_SECONDS      0
+#define APP_ADV_TIMEOUT_IN_SECONDS      20 
 
 //RTC1_Prescale
 #define APP_TIMER_PRESCALER             0
