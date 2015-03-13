@@ -10,10 +10,10 @@
 #include "ble_hci.h"
 #include "ble_srv_common.h"
 #include "ble_advdata.h"
-//#include "ble_conn_params.h"
+#include "ble_conn_params.h"
 #include "app_scheduler.h"
 #include "softdevice_handler.h"
-//#include "app_timer.h"
+#include "app_timer.h"
 #include "bleConfig.h"
 #include "ble_co.h"
 #include "lmp91000.h"
@@ -37,7 +37,8 @@ static ble_co_t			m_co;
 
 static ble_advdata_t advdata;
 static ble_gap_adv_params_t m_adv_params;
-//static app_timer_id_t notifyTimer;
+static app_timer_id_t notifyTimer;
+static app_timer_id_t rebaseTimer;
 
 #define APP_BEACON_INFO_LENGTH 	0x09
 #define APP_ADV_DATA_LENGTH		0x07
@@ -45,8 +46,6 @@ static ble_gap_adv_params_t m_adv_params;
 #define APP_BEACON_DATA			0x42, 0x68, 0x86, 0x34, 0x56
 #define APP_ID					0x43
 
-#define PRESSURE_REBASE_PRESCALER 	4095 //125ms intervals
-#define PRESSURE_REBASE_TIME		60*8 //60 seconds * 8 ticks/second
 #define PRESSURE_THRESHOLD			1000 //PA
 
 static uint8_t m_beacon_info[APP_BEACON_INFO_LENGTH] =
@@ -71,7 +70,10 @@ volatile BLE_STATE nextBleState = ADVERTISING;
 void assert_nrf_callback(uint16_t, const uint8_t*);
 static void service_error_handler(uint32_t);
 static void timers_init(void);
-static void timer_start(void);
+static void notifyTimerStart(void);
+static void notifyTimerStop(void);
+static void rebaseTimerStart(void);
+static void rebaseTimerStop(void);
 static void gap_params_init(void);
 static void services_init(void);
 static void sec_params_init(void);
@@ -81,8 +83,9 @@ static void ble_stack_init(void);
 static void sys_evt_dispatch(uint32_t);
 static void on_ble_evt(ble_evt_t * p_ble_evt);
 static void advertising_init(void);
-//static void conn_params_init(void);
+static void conn_params_init(void);
 
+void rebaseHandler(void* p_context);
 //void protocol_write_handler(ble_auth_t* auth, uint8_t protocol);
 //void len_write_handler(ble_auth_t* auth, uint16_t len);
 //void data_write_handler(ble_auth_t* auth, uint8_t* dataArray);
@@ -148,26 +151,11 @@ void advertisingStop(void) {
 	
 }
 
-void setRTC1(void) {
-
-	NRF_CLOCK->LFCLKSRC = (CLOCK_LFCLKSRC_SRC_RC << CLOCK_LFCLKSRC_SRC_Pos);
-	NRF_CLOCK->TASKS_LFCLKSTART = 1;
-	while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0); 
-  	NRF_RTC1->PRESCALER = PRESSURE_REBASE_PRESCALER; //1kHz frequency
-	NRF_RTC1->EVENTS_COMPARE[0] = 0;
-	NRF_RTC1->CC[0] = PRESSURE_REBASE_TIME;
-	NRF_RTC1->EVTENSET = RTC_EVTENSET_COMPARE0_Msk;
-	NRF_RTC1->INTENSET = RTC_INTENSET_COMPARE0_Msk;
-	NRF_RTC1->TASKS_CLEAR = 1;
-	NRF_RTC1->TASKS_START = 1;
-	NVIC_EnableIRQ(RTC1_IRQn);
-}
-
 static void setGPIOTE(void) {
 	
-	nrf_gpiote_event_config(0, PINT, NRF_GPIOTE_POLARITY_LOTOHI);
-	NRF_GPIOTE->INTENSET = GPIOTE_INTENSET_IN0_Msk;
-	NRF_GPIOTE->EVENTS_IN[0] = 0;
+	//nrf_gpiote_event_config(0, PINT, NRF_GPIOTE_POLARITY_LOTOHI);
+	NRF_GPIOTE->INTENSET = GPIOTE_INTENSET_PORT_Msk;
+	NRF_GPIOTE->EVENTS_PORT = 0;
 	NVIC_EnableIRQ(GPIOTE_IRQn);
 }
 
@@ -184,23 +172,34 @@ void sleepStart(void) {
 	setPressureThreshold(currPress);
 	setPressureInactive();
 
+	//disable twi
+	//NRF_TWI0->ENABLE = 0;
+	NRF_TWI1->ENABLE = TWI_ENABLE_ENABLE_Disabled << TWI_ENABLE_ENABLE_Pos;
+	NRF_TWI0->ENABLE = TWI_ENABLE_ENABLE_Disabled << TWI_ENABLE_ENABLE_Pos;
+
 	//setup RTC1 interrupt and pressure interrupts
-	setRTC1();
+	rebaseTimerStart();
+	nrf_gpio_cfg_sense_input(PINT, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
 	setGPIOTE();
 
 	//WAITFORINTERRUPTS
 	__WFI();
 }
 
-void RTC1_IRQHandler() {
+void rebaseHandler(void* p_context) {
+	rebaseTimerStop();
+	nextBleState = ADVERTISING;
+}
+
+/*void RTC1_IRQHandler() {
 	if(NRF_RTC1->EVENTS_COMPARE[0] != 0) {
 		NVIC_DisableIRQ(RTC1_IRQn);
 	}
-}
+}*/
 
 void GPIOTE_IRQHandler() {
 
-	if(NRF_GPIOTE->EVENTS_IN[0] != 0) {
+	if(NRF_GPIOTE->EVENTS_PORT != 0) {
 		nextBleState = ADVERTISING;
 		NVIC_DisableIRQ(RTC1_IRQn);
 		NVIC_DisableIRQ(GPIOTE_IRQn);
@@ -208,6 +207,9 @@ void GPIOTE_IRQHandler() {
 }
 
 void sleepStop(void) {
+	NRF_TWI1->ENABLE = TWI_ENABLE_ENABLE_Enabled << TWI_ENABLE_ENABLE_Pos;
+	NRF_TWI0->ENABLE = TWI_ENABLE_ENABLE_Enabled << TWI_ENABLE_ENABLE_Pos;
+	//NRF_TWI0->ENABLE = 5;
 	setGasActive();
 	setPressureActive();
 }
@@ -233,7 +235,7 @@ void bleInit() {
     gap_params_init();
     advertising_init();
     services_init();
-    //conn_params_init();
+    conn_params_init();
     sec_params_init();
 }
 
@@ -315,17 +317,37 @@ void notifyHandler(void* p_context) {
 static void timers_init(void)
 {
     // Initialize timer module, making it use the scheduler
-    //APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
+    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
 
     
-	//uint32_t err_code = app_timer_create(&notifyTimer, APP_TIMER_MODE_REPEATED, notifyHandler);
-    //APP_ERROR_CHECK(err_code); 
+	uint32_t err_code = app_timer_create(&notifyTimer, APP_TIMER_MODE_REPEATED, notifyHandler);
+    APP_ERROR_CHECK(err_code); 
+
+	err_code = app_timer_create(&rebaseTimer, APP_TIMER_MODE_REPEATED, rebaseHandler);
+    APP_ERROR_CHECK(err_code); 
 }
 
-static void timer_start(void)
+static void rebaseTimerStart(void) {
+	uint32_t err_code = app_timer_start(rebaseTimer, REBASE_RATE, NULL);
+	APP_ERROR_CHECK(err_code);
+}
+
+static void rebaseTimerStop(void) {
+	
+	uint32_t err_code = app_timer_stop(rebaseTimer);
+	APP_ERROR_CHECK(err_code);
+}
+
+static void notifyTimerStart(void)
 {
-	//uint32_t err_code = app_timer_start(notifyTimer, NOTIFY_RATE, NULL);
-	//APP_ERROR_CHECK(err_code);
+	uint32_t err_code = app_timer_start(notifyTimer, NOTIFY_RATE, NULL);
+	APP_ERROR_CHECK(err_code);
+}
+
+static void notifyTimerStop(void) {
+
+	uint32_t err_code = app_timer_stop(notifyTimer);
+	APP_ERROR_CHECK(err_code);
 }
 
 
@@ -410,7 +432,6 @@ static void sec_params_init(void)
 }
 
 //connection parameters event handler callback
-/*
 static void on_conn_params_evt(ble_conn_params_evt_t * p_evt)
 {
     uint32_t err_code;
@@ -448,7 +469,7 @@ static void conn_params_init(void)
 
     err_code = ble_conn_params_init(&cp_init);
     APP_ERROR_CHECK(err_code);
-}*/
+}
 
 
 

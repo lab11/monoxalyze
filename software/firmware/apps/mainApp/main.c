@@ -35,7 +35,3 @@ int main(void)
 		appService();
     }
 }
-
-void HardFault_Handler() {
-	return;
-}

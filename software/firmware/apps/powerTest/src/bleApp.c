@@ -103,7 +103,7 @@ void appService(void) {
 
 	//power_manage();
 
-	switch(bleState) {
+	/*switch(bleState) {
 		case NONE:
 			if(nextBleState == ADVERTISING) {
 				advertisingStart();
@@ -141,7 +141,7 @@ void appService(void) {
 				sleepStart();
 			}
 		break;
-	}
+	}*/
 }
 
 void advertisingStop(void) {
@@ -220,21 +220,21 @@ void connectedStop(void) {
 }
 
 void appInit() {
-	gasInit();
-	pressureInit();
-	ledInit();
+	//gasInit();
+	//pressureInit();
+	//ledInit();
 	bleInit();
 }
 
 void bleInit() {
-    timers_init();
+    //timers_init();
     ble_stack_init();
-    scheduler_init();
-    gap_params_init();
-    advertising_init();
-    services_init();
+    //scheduler_init();
+    //gap_params_init();
+    //advertising_init();
+    //services_init();
     //conn_params_init();
-    sec_params_init();
+    //sec_params_init();
 }
 
 void advertisingStart(void) {
@@ -561,6 +561,9 @@ static void ble_stack_init(void)
     // Register with the SoftDevice handler module for BLE events.
     err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
     APP_ERROR_CHECK(err_code);
+
+	power_manage();	
+
 }
 
 

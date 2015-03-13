@@ -18,14 +18,17 @@
 #define APP_ADV_TIMEOUT_IN_SECONDS      20 
 
 //RTC1_Prescale
-#define APP_TIMER_PRESCALER             0
+#define APP_TIMER_PRESCALER             4095
 
-#define APP_TIMER_MAX_TIMERS            2
+#define APP_TIMER_MAX_TIMERS            4
 
 //size of op queues
 #define APP_TIMER_OP_QUEUE_SIZE         4
 
 #define NOTIFY_RATE						APP_TIMER_TICKS(50, APP_TIMER_PRESCALER)
+
+#define REBASE_RATE						APP_TIMER_TICKS(60000, APP_TIMER_PRESCALER)
+
 
 //500ms
 #define MIN_CONN_INTERVAL               MSEC_TO_UNITS(500, UNIT_1_25_MS)

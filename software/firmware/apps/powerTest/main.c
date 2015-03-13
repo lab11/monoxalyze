@@ -4,38 +4,30 @@
 #include <stdbool.h>
 #include "nordic_common.h"
 #include "nrf.h"
-#include "pins.h"
-#include "led.h"
-#include "bleApp.h"
+//#include "pins.h"
+//#include "led.h"
+//#include "bleApp.h"
+#include "nrf_gpio.h"
+#include "nrf_delay.h"
 
 
 int main(void)
 {
     // Initialize
 	appInit();
-    // Enter main loop
-    while(1)
-    {
-		//this runs the bleAPP state machine
-		//that state machine generally looks like:
-		//ADVERTISE
-		//	IF CONNECT
-		//		STREAM_DATA
-		//		SLEEP
-		//	ELSE
-		//		SLEEP
-		//
-		//SLEEP
-		//	IF TIMER_WAKEUP
-		//		RESET_PRESSURE
-		//		SLEEP
-		//	ELIF PRESSURE_WAKEUP
-		//		ADVERTISE
-		//
-		appService();
-    }
+
+	//NRF_POWER->TASKS_LOWPWR = 1;
+	__WFI();
+
+   	/*while(1)
+    {     
+		if(nrf_gpio_pin_read(17) == 0)
+        {
+            // Clear LED0
+            //nrf_gpio_pin_clear(LED0);
+
+            // Enter system OFF. After wakeup the chip will be reset, and the MCU will run from the top 
+        }
+    }*/
 }
 
-void HardFault_Handler() {
-	return;
-}

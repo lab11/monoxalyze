@@ -96,17 +96,17 @@ uint16_t getTemp(void) {
 
 static void setupPressure(void) {
 
-	//ENABLE, ODR 25Hz, INTERUPT DISABLED
-	uint8_t ctr1[2] = {CTRL_REG1, 0xC0};
-    twi_master_transfer(PRESS_ADDRESS, ctr1, 2, true);
-
+	
 	//enable FIFO
-	uint8_t ctr2[2] = {CTRL_REG2, 0x60};
+	uint8_t ctr2[2] = {CTRL_REG2, 0x50};
     twi_master_transfer(PRESS_ADDRESS, ctr2, 2, true);
 
 	//set interrupt as a pressure high interrupt
 	uint8_t ctr3[2] = {CTRL_REG3, 0x01};
     twi_master_transfer(PRESS_ADDRESS, ctr3, 2, true);
+
+	uint8_t resc[2] = {RES_CONF, 0x00};
+    twi_master_transfer(PRESS_ADDRESS, resc, 2, true);
 
 	//noctrl4 changes
 
@@ -116,8 +116,13 @@ static void setupPressure(void) {
     twi_master_transfer(PRESS_ADDRESS, intcfg, 2, true);
 
 	//mean mode 2 sample moving average
-	uint8_t fifoctl[2] = {FIFO_CTRL, 0xC1};
+	uint8_t fifoctl[2] = {FIFO_CTRL, 0xC3};
     twi_master_transfer(PRESS_ADDRESS, fifoctl, 2, true);
+
+	//ENABLE, ODR 25Hz, INTERUPT DISABLED
+	uint8_t ctr1[2] = {CTRL_REG1, 0xC0};
+    twi_master_transfer(PRESS_ADDRESS, ctr1, 2, true);
+
 }
 
 //sets sample rate to that necessary to take a breath sample
