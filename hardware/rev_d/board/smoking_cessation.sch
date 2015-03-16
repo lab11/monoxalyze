@@ -871,7 +871,7 @@ the functionality of your wireless devices.</description>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="DIGIKEY" value="497-14380-1-ND" constant="no"/>
+<attribute name="DIGIKEY" value="497-15070-1-ND" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -2795,19 +2795,19 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pad name="W2_10" x="7.15" y="-4.15" drill="0.3"/>
 <circle x="9.1" y="-6.9" radius="0.316225" width="0.127" layer="21"/>
 <text x="-7.6" y="9.1" size="1.27" layer="25">&gt;NAME</text>
-<wire x1="-1.15" y1="7.65" x2="-1.15" y2="6.85" width="0.1" layer="21"/>
-<wire x1="1.15" y1="7.65" x2="1.15" y2="6.85" width="0.1" layer="21"/>
-<wire x1="-7.65" y1="1.15" x2="-6.55" y2="1.15" width="0.1" layer="21"/>
-<wire x1="-7.65" y1="-1.15" x2="-6.55" y2="-1.15" width="0.1" layer="21"/>
-<wire x1="7.65" y1="-1.1" x2="6.55" y2="-1.1" width="0.1" layer="21"/>
-<wire x1="7.65" y1="1.15" x2="6.55" y2="1.15" width="0.1" layer="21"/>
-<wire x1="-1.15" y1="-7.6" x2="-1.15" y2="-6.55" width="0.1" layer="21"/>
-<wire x1="1.15" y1="-7.6" x2="1.15" y2="-6.55" width="0.1" layer="21"/>
+<wire x1="-1.15" y1="7.65" x2="-1.15" y2="6.85" width="0.1" layer="20"/>
+<wire x1="1.15" y1="7.65" x2="1.15" y2="6.85" width="0.1" layer="20"/>
+<wire x1="-7.65" y1="1.15" x2="-6.55" y2="1.15" width="0.1" layer="20"/>
+<wire x1="-7.65" y1="-1.15" x2="-6.55" y2="-1.15" width="0.1" layer="20"/>
+<wire x1="7.65" y1="-1.1" x2="6.55" y2="-1.1" width="0.1" layer="20"/>
+<wire x1="7.65" y1="1.15" x2="6.55" y2="1.15" width="0.1" layer="20"/>
+<wire x1="-1.15" y1="-7.6" x2="-1.15" y2="-6.55" width="0.1" layer="20"/>
+<wire x1="1.15" y1="-7.6" x2="1.15" y2="-6.55" width="0.1" layer="20"/>
 <circle x="0" y="0.25" radius="6.25" width="0.1" layer="21"/>
-<wire x1="-6.55" y1="-1.15" x2="-1.15" y2="-6.55" width="0.1" layer="21" curve="70.083859"/>
-<wire x1="-1.15" y1="6.85" x2="-6.55" y2="1.15" width="0.1" layer="21" curve="74.284571"/>
-<wire x1="1.15" y1="6.85" x2="6.55" y2="1.15" width="0.1" layer="21" curve="-74.478281"/>
-<wire x1="1.15" y1="-6.55" x2="6.55" y2="-1.1" width="0.1" layer="21" curve="70.508697"/>
+<wire x1="-6.55" y1="-1.15" x2="-1.15" y2="-6.55" width="0.1" layer="20" curve="70.083859"/>
+<wire x1="-1.15" y1="6.85" x2="-6.55" y2="1.15" width="0.1" layer="20" curve="74.284571"/>
+<wire x1="1.15" y1="6.85" x2="6.55" y2="1.15" width="0.1" layer="20" curve="-74.478281"/>
+<wire x1="1.15" y1="-6.55" x2="6.55" y2="-1.1" width="0.1" layer="20" curve="70.508697"/>
 <polygon width="0.1" layer="29">
 <vertex x="-7.7" y="7.7"/>
 <vertex x="-2.65" y="7.7"/>
@@ -2914,7 +2914,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="C6" library="passives" deviceset="CAPACITOR" device="" value="1nF">
 <attribute name="DIGIKEY" value="490-1303-1-ND"/>
 </part>
-<part name="C11" library="passives" deviceset="CAPACITOR" device="" value="47nF">
+<part name="C12" library="passives" deviceset="CAPACITOR" device="" value="47nF">
 <attribute name="DIGIKEY" value="445-1264-1-ND"/>
 </part>
 <part name="GND8" library="supply1" deviceset="GND" device=""/>
@@ -2924,7 +2924,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <attribute name="DIGIKEY" value="490-5419-1-ND"/>
 </part>
 <part name="GND20" library="supply1" deviceset="GND" device=""/>
-<part name="R9" library="passives" deviceset="RESISTOR" device="0402_RES" value="12kΩ">
+<part name="R8" library="passives" deviceset="RESISTOR" device="0402_RES" value="12kΩ">
 <attribute name="DIGIKEY" value="RHM12.0KCDCT-ND"/>
 </part>
 <part name="GND21" library="supply1" deviceset="GND" device=""/>
@@ -2951,7 +2951,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="GND2" library="supply1" deviceset="GND" device=""/>
 <part name="U3" library="chips" deviceset="LMP91000" device="" value=""/>
 <part name="SUPPLY1" library="supply1" deviceset="GND" device=""/>
-<part name="C12" library="passives" deviceset="CAPACITOR" device="" value="0.1uF"/>
+<part name="C11" library="passives" deviceset="CAPACITOR" device="" value="10nF"/>
 <part name="SUPPLY2" library="supply1" deviceset="GND" device=""/>
 <part name="SUPPLY3" library="supply1" deviceset="GND" device=""/>
 <part name="C10" library="passives" deviceset="CAPACITOR" device="" value="10nF"/>
@@ -2963,7 +2963,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="SUPPLY9" library="supply1" deviceset="GND" device=""/>
 <part name="C20" library="passives" deviceset="CAPACITOR" device="" value="4.7uF"/>
 <part name="SUPPLY10" library="supply1" deviceset="GND" device=""/>
-<part name="R10" library="passives" deviceset="RESISTOR" device="0402_RES" value="20kΩ"/>
+<part name="R9" library="passives" deviceset="RESISTOR" device="0402_RES" value="20kΩ"/>
 <part name="R1" library="passives" deviceset="RESISTOR" device="0402_RES" value="0Ω"/>
 <part name="C14" library="passives" deviceset="CAPACITOR" device="" value="0.1uF"/>
 <part name="U6" library="chips" deviceset="ISL60002" device="" value="1.8V"/>
@@ -2972,10 +2972,10 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="SUPPLY12" library="supply1" deviceset="GND" device=""/>
 <part name="FRAME3" library="frames" deviceset="LETTER_L" device=""/>
 <part name="P+2" library="supply1" deviceset="VCC" device=""/>
-<part name="R8" library="passives" deviceset="RESISTOR" device="0402_RES" value="10kΩ">
+<part name="R7" library="passives" deviceset="RESISTOR" device="0402_RES" value="10kΩ">
 <attribute name="DIGIKEY" value="RHM12.0KCDCT-ND"/>
 </part>
-<part name="R7" library="passives" deviceset="RESISTOR" device="0402_RES" value="10kΩ">
+<part name="R6" library="passives" deviceset="RESISTOR" device="0402_RES" value="10kΩ">
 <attribute name="DIGIKEY" value="RHM12.0KCDCT-ND"/>
 </part>
 <part name="D3" library="SparkFun-LED" deviceset="LED" device="1206" value="BLUE"/>
@@ -3007,7 +3007,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="U2" library="chips" deviceset="LTC4065" device=""/>
 <part name="R12" library="passives" deviceset="RESISTOR" device="0402_RES" value="1MΩ"/>
 <part name="C18" library="passives" deviceset="CAPACITOR" device="" value="1uF"/>
-<part name="R6" library="passives" deviceset="RESISTOR" device="0402_RES" value="5.23kΩ"/>
+<part name="R10" library="passives" deviceset="RESISTOR" device="0402_RES" value="25.5kΩ"/>
 <part name="R13" library="passives" deviceset="RESISTOR" device="0402_RES" value="2MΩ"/>
 <part name="SUPPLY5" library="supply1" deviceset="GND" device=""/>
 <part name="U4" library="chips" deviceset="TPS715AXX" device=""/>
@@ -3073,7 +3073,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="C6" gate="G$1" x="142.24" y="71.12">
 <attribute name="DIGIKEY" x="142.24" y="71.12" size="1.778" layer="96" display="off"/>
 </instance>
-<instance part="C11" gate="G$1" x="132.08" y="71.12">
+<instance part="C12" gate="G$1" x="132.08" y="71.12">
 <attribute name="DIGIKEY" x="132.08" y="71.12" size="1.778" layer="96" display="off"/>
 </instance>
 <instance part="GND8" gate="1" x="132.08" y="60.96"/>
@@ -3083,7 +3083,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <attribute name="DIGIKEY" x="152.4" y="71.12" size="1.778" layer="96" display="off"/>
 </instance>
 <instance part="GND20" gate="1" x="152.4" y="60.96"/>
-<instance part="R9" gate="G$1" x="76.2" y="78.74" rot="R270">
+<instance part="R8" gate="G$1" x="76.2" y="78.74" rot="R270">
 <attribute name="DIGIKEY" x="76.2" y="78.74" size="1.27" layer="96" rot="R270" display="off"/>
 </instance>
 <instance part="GND21" gate="1" x="76.2" y="66.04"/>
@@ -3110,10 +3110,10 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="GND2" gate="1" x="139.7" y="114.3"/>
 <instance part="LOGO1" gate="G$1" x="208.28" y="175.26"/>
 <instance part="P+2" gate="VCC" x="35.56" y="132.08"/>
-<instance part="R8" gate="G$1" x="35.56" y="119.38" rot="R270">
+<instance part="R7" gate="G$1" x="35.56" y="119.38" rot="R270">
 <attribute name="DIGIKEY" x="35.56" y="119.38" size="1.27" layer="96" rot="R270" display="off"/>
 </instance>
-<instance part="R7" gate="G$1" x="45.72" y="119.38" rot="R270">
+<instance part="R6" gate="G$1" x="45.72" y="119.38" rot="R270">
 <attribute name="DIGIKEY" x="45.72" y="119.38" size="1.27" layer="96" rot="R270" display="off"/>
 </instance>
 <instance part="D3" gate="G$1" x="-17.78" y="33.02"/>
@@ -3190,7 +3190,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <junction x="167.64" y="119.38"/>
 </segment>
 <segment>
-<pinref part="C11" gate="G$1" pin="2"/>
+<pinref part="C12" gate="G$1" pin="2"/>
 <wire x1="132.08" y1="66.04" x2="132.08" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="GND8" gate="1" pin="GND"/>
 </segment>
@@ -3215,7 +3215,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="152.4" y1="63.5" x2="152.4" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="R9" gate="G$1" pin="2"/>
+<pinref part="R8" gate="G$1" pin="2"/>
 <pinref part="GND21" gate="1" pin="GND"/>
 <wire x1="76.2" y1="73.66" x2="76.2" y2="68.58" width="0.1524" layer="91"/>
 </segment>
@@ -3308,9 +3308,9 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </segment>
 <segment>
 <pinref part="P+2" gate="VCC" pin="VCC"/>
-<pinref part="R8" gate="G$1" pin="1"/>
-<wire x1="35.56" y1="124.46" x2="35.56" y2="127" width="0.1524" layer="91"/>
 <pinref part="R7" gate="G$1" pin="1"/>
+<wire x1="35.56" y1="124.46" x2="35.56" y2="127" width="0.1524" layer="91"/>
+<pinref part="R6" gate="G$1" pin="1"/>
 <wire x1="35.56" y1="127" x2="35.56" y2="129.54" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="124.46" x2="45.72" y2="127" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="127" x2="35.56" y2="127" width="0.1524" layer="91"/>
@@ -3437,7 +3437,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <net name="N$19" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="DEC2"/>
-<pinref part="C11" gate="G$1" pin="1"/>
+<pinref part="C12" gate="G$1" pin="1"/>
 <wire x1="124.46" y1="76.2" x2="132.08" y2="76.2" width="0.1524" layer="91"/>
 <wire x1="132.08" y1="76.2" x2="132.08" y2="73.66" width="0.1524" layer="91"/>
 </segment>
@@ -3447,7 +3447,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="U1" gate="G$1" pin="SWDCLK"/>
 <wire x1="78.74" y1="86.36" x2="76.2" y2="86.36" width="0.1524" layer="91"/>
 <label x="60.96" y="86.36" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="R9" gate="G$1" pin="1"/>
+<pinref part="R8" gate="G$1" pin="1"/>
 <wire x1="76.2" y1="86.36" x2="60.96" y2="86.36" width="0.1524" layer="91"/>
 <wire x1="76.2" y1="83.82" x2="76.2" y2="86.36" width="0.1524" layer="91"/>
 <junction x="76.2" y="86.36"/>
@@ -3597,7 +3597,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="U1" gate="G$1" pin="P08"/>
 <label x="27.94" y="111.76" size="1.27" layer="95" rot="R180" xref="yes"/>
 <wire x1="78.74" y1="111.76" x2="35.56" y2="111.76" width="0.1524" layer="91"/>
-<pinref part="R8" gate="G$1" pin="2"/>
+<pinref part="R7" gate="G$1" pin="2"/>
 <wire x1="35.56" y1="111.76" x2="27.94" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="114.3" x2="35.56" y2="111.76" width="0.1524" layer="91"/>
 <junction x="35.56" y="111.76"/>
@@ -3605,7 +3605,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </net>
 <net name="SCL" class="0">
 <segment>
-<pinref part="R7" gate="G$1" pin="2"/>
+<pinref part="R6" gate="G$1" pin="2"/>
 <wire x1="45.72" y1="114.3" x2="45.72" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="109.22" x2="78.74" y2="109.22" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="P09"/>
@@ -3654,7 +3654,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instances>
 <instance part="U3" gate="G$1" x="-66.04" y="50.8"/>
 <instance part="SUPPLY1" gate="1" x="-25.4" y="20.32"/>
-<instance part="C12" gate="G$1" x="-33.02" y="60.96" smashed="yes" rot="R180">
+<instance part="C11" gate="G$1" x="-33.02" y="60.96" smashed="yes" rot="R180">
 <attribute name="NAME" x="-28.448" y="65.913" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="-26.67" y="60.579" size="1.778" layer="96" rot="R180"/>
 </instance>
@@ -3672,7 +3672,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <attribute name="VALUE" x="59.69" y="-48.641" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="SUPPLY10" gate="1" x="50.8" y="-58.42"/>
-<instance part="R10" gate="G$1" x="109.22" y="-7.62" rot="R90"/>
+<instance part="R9" gate="G$1" x="109.22" y="-7.62" rot="R90"/>
 <instance part="R1" gate="G$1" x="-55.88" y="-86.36" rot="R180"/>
 <instance part="C14" gate="G$1" x="104.14" y="63.5" rot="R90"/>
 <instance part="U6" gate="G$1" x="101.6" y="45.72"/>
@@ -3684,7 +3684,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="U2" gate="G$1" x="-55.88" y="-30.48"/>
 <instance part="R12" gate="G$1" x="-76.2" y="-27.94" rot="R90"/>
 <instance part="C18" gate="G$1" x="-91.44" y="-35.56"/>
-<instance part="R6" gate="G$1" x="-35.56" y="-33.02" rot="R90"/>
+<instance part="R10" gate="G$1" x="-35.56" y="-33.02" rot="R90"/>
 <instance part="R13" gate="G$1" x="-76.2" y="-38.1" rot="R90"/>
 <instance part="SUPPLY5" gate="1" x="-55.88" y="-45.72"/>
 <instance part="U4" gate="G$1" x="10.16" y="-25.4"/>
@@ -3712,7 +3712,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <nets>
 <net name="GND" class="0">
 <segment>
-<pinref part="C12" gate="G$1" pin="1"/>
+<pinref part="C11" gate="G$1" pin="1"/>
 <pinref part="SUPPLY2" gate="1" pin="GND"/>
 <wire x1="-33.02" y1="58.42" x2="-33.02" y2="55.88" width="0.1524" layer="91"/>
 </segment>
@@ -3795,7 +3795,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="-71.12" y1="-38.1" x2="-71.12" y2="-43.18" width="0.1524" layer="91"/>
 <junction x="-71.12" y="-43.18"/>
 <junction x="-35.56" y="-38.1"/>
-<pinref part="R6" gate="G$1" pin="1"/>
+<pinref part="R10" gate="G$1" pin="1"/>
 <pinref part="R13" gate="G$1" pin="1"/>
 <junction x="-76.2" y="-43.18"/>
 <pinref part="SUPPLY5" gate="1" pin="GND"/>
@@ -3837,7 +3837,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <segment>
 <pinref part="P+8" gate="VCC" pin="VCC"/>
 <wire x1="109.22" y1="-2.54" x2="109.22" y2="2.54" width="0.1524" layer="91"/>
-<pinref part="R10" gate="G$1" pin="2"/>
+<pinref part="R9" gate="G$1" pin="2"/>
 </segment>
 <segment>
 <pinref part="P+9" gate="VCC" pin="VCC"/>
@@ -3859,7 +3859,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="-38.1" y1="68.58" x2="-38.1" y2="53.34" width="0.1524" layer="91"/>
 <pinref part="U3" gate="G$1" pin="VDD"/>
 <wire x1="-38.1" y1="53.34" x2="-48.26" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="C12" gate="G$1" pin="2"/>
+<pinref part="C11" gate="G$1" pin="2"/>
 <wire x1="-33.02" y1="66.04" x2="-33.02" y2="68.58" width="0.1524" layer="91"/>
 <junction x="-33.02" y="68.58"/>
 <label x="-22.86" y="68.58" size="1.778" layer="95" xref="yes"/>
@@ -3984,7 +3984,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="U5" gate="G$1" pin="CS"/>
 <wire x1="109.22" y1="-12.7" x2="109.22" y2="-15.24" width="0.1524" layer="91"/>
 <wire x1="109.22" y1="-15.24" x2="99.06" y2="-15.24" width="0.1524" layer="91"/>
-<pinref part="R10" gate="G$1" pin="1"/>
+<pinref part="R9" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="PINT" class="0">
@@ -4028,7 +4028,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </net>
 <net name="N$13" class="0">
 <segment>
-<pinref part="R6" gate="G$1" pin="2"/>
+<pinref part="R10" gate="G$1" pin="2"/>
 <wire x1="-35.56" y1="-27.94" x2="-38.1" y2="-27.94" width="0.1524" layer="91"/>
 <wire x1="-38.1" y1="-27.94" x2="-38.1" y2="-30.48" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="PROG"/>
