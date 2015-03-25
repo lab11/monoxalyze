@@ -24,6 +24,4 @@
 //AIN5
 #define VOUT 5
 
-#define TESTSQ 13
-
 #endif
