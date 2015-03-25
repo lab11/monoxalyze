@@ -2061,87 +2061,6 @@ Standard schematic elements and footprints for 5mm, 3mm, 1206, and 0603 sized LE
 </deviceset>
 </devicesets>
 </library>
-<library name="switches">
-<description>&lt;b&gt;LAB11&lt;/b&gt; - Switches.</description>
-<packages>
-<package name="B3U-3000P-B">
-<smd name="1" x="-1.7" y="0" dx="0.8" dy="1.7" layer="1"/>
-<smd name="2" x="1.7" y="0" dx="0.8" dy="1.7" layer="1"/>
-<wire x1="-1.5" y1="1.25" x2="-1.5" y2="-1.25" width="0.127" layer="21"/>
-<wire x1="-1.5" y1="-1.25" x2="1.5" y2="-1.25" width="0.127" layer="21"/>
-<wire x1="1.5" y1="-1.25" x2="1.5" y2="1.25" width="0.127" layer="21"/>
-<wire x1="1.5" y1="1.25" x2="-1.5" y2="1.25" width="0.127" layer="21"/>
-<wire x1="-0.85" y1="1.25" x2="-0.85" y2="1.65" width="0.127" layer="51"/>
-<wire x1="-0.85" y1="1.65" x2="-0.55" y2="1.95" width="0.127" layer="51"/>
-<wire x1="-0.55" y1="1.95" x2="0.55" y2="1.95" width="0.127" layer="51"/>
-<wire x1="0.55" y1="1.95" x2="0.85" y2="1.65" width="0.127" layer="51"/>
-<wire x1="0.85" y1="1.65" x2="0.85" y2="1.25" width="0.127" layer="51"/>
-<pad name="P$1" x="0" y="0" drill="0.75"/>
-<text x="0" y="2.54" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
-</package>
-<package name="B3U-1000P">
-<smd name="1" x="-1.7" y="0" dx="0.8" dy="1.7" layer="1"/>
-<smd name="2" x="1.7" y="0" dx="0.8" dy="1.7" layer="1"/>
-<wire x1="-1.5" y1="1.25" x2="-1.5" y2="-1.25" width="0.127" layer="21"/>
-<wire x1="-1.5" y1="-1.25" x2="1.5" y2="-1.25" width="0.127" layer="21"/>
-<wire x1="1.5" y1="-1.25" x2="1.5" y2="1.25" width="0.127" layer="21"/>
-<wire x1="1.5" y1="1.25" x2="-1.5" y2="1.25" width="0.127" layer="21"/>
-<text x="0" y="2.54" size="1.016" layer="25" font="vector" ratio="12" align="bottom-center">&gt;NAME</text>
-</package>
-</packages>
-<symbols>
-<symbol name="PUSH-BUTTON-SWITCH">
-<description>Push Button Switch</description>
-<wire x1="-7.62" y1="0" x2="-2.54" y2="0" width="0.254" layer="94"/>
-<wire x1="2.54" y1="0" x2="7.62" y2="0" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="0" x2="1.27" y2="2.54" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="3.81" x2="-2.54" y2="5.08" width="0.254" layer="94"/>
-<wire x1="-2.54" y1="5.08" x2="0" y2="5.08" width="0.254" layer="94"/>
-<wire x1="0" y1="5.08" x2="2.54" y2="5.08" width="0.254" layer="94"/>
-<wire x1="2.54" y1="5.08" x2="2.54" y2="3.81" width="0.254" layer="94"/>
-<wire x1="0" y1="0" x2="0" y2="1.016" width="0.254" layer="94" style="shortdash"/>
-<circle x="2.54" y="0" radius="0.3592" width="0.254" layer="94"/>
-<circle x="-2.54" y="0" radius="0.3592" width="0.254" layer="94"/>
-<text x="-2.54" y="-2.54" size="1.778" layer="95">&gt;NAME</text>
-<pin name="P$1" x="-7.62" y="0" visible="pad" length="middle" direction="pas"/>
-<pin name="P$2" x="7.62" y="0" visible="pad" length="middle" direction="pas" rot="R180"/>
-<wire x1="0" y1="2.032" x2="0" y2="3.048" width="0.254" layer="94" style="shortdash"/>
-<wire x1="0" y1="4.064" x2="0" y2="5.08" width="0.254" layer="94" style="shortdash"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="B3U" prefix="S">
-<description>Switch</description>
-<gates>
-<gate name="G$1" symbol="PUSH-BUTTON-SWITCH" x="0" y="0"/>
-</gates>
-<devices>
-<device name="-3000P-B" package="B3U-3000P-B">
-<connects>
-<connect gate="G$1" pin="P$1" pad="1"/>
-<connect gate="G$1" pin="P$2" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="DIGIKEY" value="SW1256CT-ND" constant="no"/>
-</technology>
-</technologies>
-</device>
-<device name="-1000P" package="B3U-1000P">
-<connects>
-<connect gate="G$1" pin="P$1" pad="1"/>
-<connect gate="G$1" pin="P$2" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="DIGIKEY" value="SW1020CT-ND" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="SparkFun-Connectors">
 <description>&lt;h3&gt;SparkFun Electronics' preferred foot prints&lt;/h3&gt;
 In this library you'll find connectors and sockets- basically anything that can be plugged into or onto.&lt;br&gt;&lt;br&gt;
@@ -2728,110 +2647,15 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <library name="gas-sensor">
 <description>LAB11 - Electrochemical gas sensors</description>
 <packages>
-<package name="SPEC2">
-<wire x1="-7.65" y1="-1.15" x2="-7.65" y2="1.15" width="0.1" layer="20"/>
-<wire x1="-1.15" y1="7.65" x2="1.15" y2="7.65" width="0.1" layer="20"/>
-<wire x1="7.65" y1="1.15" x2="7.65" y2="-1.1" width="0.1" layer="20"/>
-<wire x1="1.15" y1="-7.6" x2="-1.15" y2="-7.6" width="0.1" layer="20"/>
-<polygon width="0.1524" layer="1">
-<vertex x="-7.65" y="2.7"/>
-<vertex x="-2.75" y="7.65"/>
-<vertex x="-7.65" y="7.65"/>
-</polygon>
-<polygon width="0.1524" layer="1">
-<vertex x="2.7" y="7.65"/>
-<vertex x="7.65" y="2.75"/>
-<vertex x="7.65" y="7.65"/>
-</polygon>
-<polygon width="0.1524" layer="1">
-<vertex x="-7.65" y="-2.7"/>
-<vertex x="-2.7" y="-7.65"/>
-<vertex x="-7.65" y="-7.65"/>
-</polygon>
-<polygon width="0.1524" layer="1">
-<vertex x="2.7" y="-7.65"/>
-<vertex x="7.65" y="-7.6"/>
-<vertex x="7.65" y="-2.7"/>
-</polygon>
-<pad name="C_1" x="-7.15" y="7.15" drill="0.3"/>
-<pad name="C_2" x="-4.15" y="7.15" drill="0.3"/>
-<pad name="C_3" x="-5.15" y="7.15" drill="0.3"/>
-<pad name="C_4" x="-6.15" y="7.15" drill="0.3"/>
-<pad name="C_5" x="-7.15" y="5.15" drill="0.3"/>
-<pad name="C_8" x="-7.15" y="6.15" drill="0.3"/>
-<pad name="C_10" x="-7.15" y="4.15" drill="0.3"/>
-<pad name="C_9" x="-6.15" y="5.15" drill="0.3"/>
-<pad name="C_6" x="-6.15" y="6.15" drill="0.3"/>
-<pad name="C_7" x="-5.15" y="6.15" drill="0.3"/>
-<pad name="W1_1" x="7.15" y="7.15" drill="0.3"/>
-<pad name="W1_2" x="6.15" y="7.15" drill="0.3"/>
-<pad name="W1_3" x="5.15" y="7.15" drill="0.3"/>
-<pad name="W1_4" x="4.15" y="7.15" drill="0.3"/>
-<pad name="W1_7" x="5.15" y="6.15" drill="0.3"/>
-<pad name="W1_6" x="6.15" y="6.15" drill="0.3"/>
-<pad name="W1_5" x="7.15" y="6.15" drill="0.3"/>
-<pad name="W1_8" x="7.15" y="5.15" drill="0.3"/>
-<pad name="W1_9" x="6.15" y="5.15" drill="0.3"/>
-<pad name="W1_10" x="7.15" y="4.15" drill="0.3"/>
-<pad name="R_1" x="-7.15" y="-7.15" drill="0.3"/>
-<pad name="R_2" x="-6.15" y="-7.15" drill="0.3"/>
-<pad name="R_7" x="-7.15" y="-6.15" drill="0.3"/>
-<pad name="R_3" x="-5.15" y="-7.15" drill="0.3"/>
-<pad name="R_4" x="-4.15" y="-7.15" drill="0.3"/>
-<pad name="R_5" x="-5.15" y="-6.15" drill="0.3"/>
-<pad name="R_6" x="-6.15" y="-6.15" drill="0.3"/>
-<pad name="R_9" x="-7.15" y="-5.15" drill="0.3"/>
-<pad name="R_8" x="-6.15" y="-5.15" drill="0.3"/>
-<pad name="R_10" x="-7.15" y="-4.15" drill="0.3"/>
-<pad name="W2_1" x="7.15" y="-7.15" drill="0.3"/>
-<pad name="W2_2" x="6.15" y="-7.15" drill="0.3"/>
-<pad name="W2_3" x="5.15" y="-7.15" drill="0.3"/>
-<pad name="W2_4" x="4.15" y="-7.15" drill="0.3"/>
-<pad name="W2_5" x="7.15" y="-6.15" drill="0.3"/>
-<pad name="W2_6" x="6.15" y="-6.15" drill="0.3"/>
-<pad name="W2_7" x="5.15" y="-6.15" drill="0.3"/>
-<pad name="W2_9" x="6.15" y="-5.15" drill="0.3"/>
-<pad name="W2_8" x="7.15" y="-5.15" drill="0.3"/>
-<pad name="W2_10" x="7.15" y="-4.15" drill="0.3"/>
-<circle x="9.1" y="-6.9" radius="0.316225" width="0.127" layer="21"/>
-<text x="-7.6" y="9.1" size="1.27" layer="25">&gt;NAME</text>
-<wire x1="-1.15" y1="7.65" x2="-1.15" y2="6.85" width="0.1" layer="20"/>
-<wire x1="1.15" y1="7.65" x2="1.15" y2="6.85" width="0.1" layer="20"/>
-<wire x1="-7.65" y1="1.15" x2="-6.55" y2="1.15" width="0.1" layer="20"/>
-<wire x1="-7.65" y1="-1.15" x2="-6.55" y2="-1.15" width="0.1" layer="20"/>
-<wire x1="7.65" y1="-1.1" x2="6.55" y2="-1.1" width="0.1" layer="20"/>
-<wire x1="7.65" y1="1.15" x2="6.55" y2="1.15" width="0.1" layer="20"/>
-<wire x1="-1.15" y1="-7.6" x2="-1.15" y2="-6.55" width="0.1" layer="20"/>
-<wire x1="1.15" y1="-7.6" x2="1.15" y2="-6.55" width="0.1" layer="20"/>
-<circle x="0" y="0.25" radius="6.25" width="0.1" layer="21"/>
-<wire x1="-6.55" y1="-1.15" x2="-1.15" y2="-6.55" width="0.1" layer="20" curve="70.083859"/>
-<wire x1="-1.15" y1="6.85" x2="-6.55" y2="1.15" width="0.1" layer="20" curve="74.284571"/>
-<wire x1="1.15" y1="6.85" x2="6.55" y2="1.15" width="0.1" layer="20" curve="-74.478281"/>
-<wire x1="1.15" y1="-6.55" x2="6.55" y2="-1.1" width="0.1" layer="20" curve="70.508697"/>
-<polygon width="0.1" layer="29">
-<vertex x="-7.7" y="7.7"/>
-<vertex x="-2.65" y="7.7"/>
-<vertex x="-2.65" y="7.65"/>
-<vertex x="-7.7" y="2.6"/>
-</polygon>
-<polygon width="0.1" layer="29">
-<vertex x="7.7" y="7.7"/>
-<vertex x="7.7" y="2.65"/>
-<vertex x="7.65" y="2.65"/>
-<vertex x="2.6" y="7.7"/>
-</polygon>
-<polygon width="0.1" layer="29">
-<vertex x="-7.7" y="-7.7"/>
-<vertex x="-7.7" y="-2.65"/>
-<vertex x="-7.65" y="-2.65"/>
-<vertex x="-2.6" y="-7.7"/>
-</polygon>
-<polygon width="0.1" layer="29">
-<vertex x="7.7" y="-7.7"/>
-<vertex x="2.65" y="-7.7"/>
-<vertex x="2.65" y="-7.65"/>
-<vertex x="7.7" y="-2.6"/>
-</polygon>
+<package name="MICROCEL-CF">
+<smd name="WE" x="0" y="0" dx="2.8" dy="5" layer="16"/>
+<smd name="RE" x="-5" y="0" dx="2.8" dy="5" layer="16"/>
+<smd name="CE" x="5" y="0" dx="2.8" dy="5" layer="16"/>
+<wire x1="-8.5" y1="0" x2="8.5" y2="0" width="0.127" layer="21"/>
+<wire x1="8.5" y1="0" x2="8.5" y2="-17" width="0.127" layer="21"/>
+<wire x1="8.5" y1="-17" x2="-8.5" y2="-17" width="0.127" layer="21"/>
+<wire x1="-8.5" y1="-17" x2="-8.5" y2="0" width="0.127" layer="21"/>
+<circle x="0" y="-9.75" radius="4" width="0.127" layer="20"/>
 </package>
 </packages>
 <symbols>
@@ -2848,17 +2672,17 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="SPECSENSOR">
-<description>Three Electrod Gas Sensor</description>
+<deviceset name="MICROCEL-CF">
+<description>MICROCEL-CF Gas Sensor mady by CityTech</description>
 <gates>
 <gate name="G$1" symbol="3E" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="SPEC2">
+<device name="" package="MICROCEL-CF">
 <connects>
-<connect gate="G$1" pin="C" pad="C_1 C_2 C_3 C_4 C_5 C_6 C_7 C_8 C_9 C_10"/>
-<connect gate="G$1" pin="R" pad="R_1 R_2 R_3 R_4 R_5 R_6 R_7 R_8 R_9 R_10"/>
-<connect gate="G$1" pin="W" pad="W1_1 W1_2 W1_3 W1_4 W1_5 W1_6 W1_7 W1_8 W1_9 W1_10 W2_1 W2_2 W2_3 W2_4 W2_5 W2_6 W2_7 W2_8 W2_9 W2_10"/>
+<connect gate="G$1" pin="C" pad="CE"/>
+<connect gate="G$1" pin="R" pad="RE"/>
+<connect gate="G$1" pin="W" pad="WE"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -2964,7 +2788,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="C20" library="passives" deviceset="CAPACITOR" device="" value="4.7uF"/>
 <part name="SUPPLY10" library="supply1" deviceset="GND" device=""/>
 <part name="R9" library="passives" deviceset="RESISTOR" device="0402_RES" value="20kΩ"/>
-<part name="R1" library="passives" deviceset="RESISTOR" device="0402_RES" value="0Ω"/>
 <part name="C14" library="passives" deviceset="CAPACITOR" device="" value="0.1uF"/>
 <part name="U6" library="chips" deviceset="ISL60002" device="" value="1.8V"/>
 <part name="SUPPLY11" library="supply1" deviceset="GND" device=""/>
@@ -2999,11 +2822,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="R4" library="passives" deviceset="RESISTOR" device="0402_RES" value="75Ω">
 <attribute name="DIGIKEY" value="RHM12.0KCDCT-ND"/>
 </part>
-<part name="S1" library="switches" deviceset="B3U" device="-1000P"/>
-<part name="R5" library="passives" deviceset="RESISTOR" device="0402_RES" value="150Ω">
-<attribute name="DIGIKEY" value="RHM12.0KCDCT-ND"/>
-</part>
-<part name="GND15" library="supply1" deviceset="GND" device=""/>
 <part name="U2" library="chips" deviceset="LTC4065" device=""/>
 <part name="R12" library="passives" deviceset="RESISTOR" device="0402_RES" value="1MΩ"/>
 <part name="C18" library="passives" deviceset="CAPACITOR" device="" value="1uF"/>
@@ -3017,7 +2835,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="R14" library="passives" deviceset="RESISTOR" device="0402_RES" value="2.2MΩ"/>
 <part name="J3" library="SparkFun-Connectors" deviceset="M02" device="PTH"/>
 <part name="SUPPLY8" library="supply1" deviceset="GND" device=""/>
-<part name="U7" library="gas-sensor" deviceset="SPECSENSOR" device=""/>
 <part name="J1" library="connector" deviceset="MOLEX_MICRO_USB_B_047346" device=""/>
 <part name="SUPPLY13" library="supply1" deviceset="GND" device=""/>
 <part name="C13" library="passives" deviceset="CAPACITOR" device="" value="0.1uF"/>
@@ -3027,6 +2844,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="C15" library="passives" deviceset="CAPACITOR" device="" value="0.1uF"/>
 <part name="GND9" library="supply1" deviceset="GND" device=""/>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
+<part name="U$1" library="gas-sensor" deviceset="MICROCEL-CF" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3143,11 +2961,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="R4" gate="G$1" x="27.94" y="43.18" rot="R270">
 <attribute name="DIGIKEY" x="27.94" y="43.18" size="1.27" layer="96" rot="R270" display="off"/>
 </instance>
-<instance part="S1" gate="G$1" x="66.04" y="63.5" rot="R90"/>
-<instance part="R5" gate="G$1" x="66.04" y="78.74" rot="R270">
-<attribute name="DIGIKEY" x="66.04" y="78.74" size="1.27" layer="96" rot="R270" display="off"/>
-</instance>
-<instance part="GND15" gate="1" x="66.04" y="50.8"/>
 <instance part="GND1" gate="1" x="73.66" y="99.06"/>
 <instance part="GND9" gate="1" x="132.08" y="101.6"/>
 <instance part="GND16" gate="1" x="129.54" y="134.62"/>
@@ -3254,11 +3067,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <pinref part="GND5" gate="1" pin="GND"/>
 <pinref part="Q3" gate="G$1" pin="S"/>
 <wire x1="27.94" y1="12.7" x2="27.94" y2="15.24" width="0.1524" layer="91"/>
-</segment>
-<segment>
-<pinref part="S1" gate="G$1" pin="P$1"/>
-<pinref part="GND15" gate="1" pin="GND"/>
-<wire x1="66.04" y1="55.88" x2="66.04" y2="53.34" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="P10"/>
@@ -3461,12 +3269,8 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <net name="SWDIO/!RESET" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="SWDIO/!RESET"/>
-<wire x1="78.74" y1="88.9" x2="66.04" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="88.9" x2="60.96" y2="88.9" width="0.1524" layer="91"/>
 <label x="60.96" y="88.9" size="1.27" layer="95" rot="R180" xref="yes"/>
-<pinref part="R5" gate="G$1" pin="1"/>
-<wire x1="66.04" y1="88.9" x2="60.96" y2="88.9" width="0.1524" layer="91"/>
-<wire x1="66.04" y1="83.82" x2="66.04" y2="88.9" width="0.1524" layer="91"/>
-<junction x="66.04" y="88.9"/>
 </segment>
 <segment>
 <pinref part="J2" gate="G$1" pin="SWDIO"/>
@@ -3585,13 +3389,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <wire x1="27.94" y1="35.56" x2="27.94" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$24" class="0">
-<segment>
-<pinref part="R5" gate="G$1" pin="2"/>
-<pinref part="S1" gate="G$1" pin="P$2"/>
-<wire x1="66.04" y1="73.66" x2="66.04" y2="71.12" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="SDA" class="0">
 <segment>
 <pinref part="U1" gate="G$1" pin="P08"/>
@@ -3673,7 +3470,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </instance>
 <instance part="SUPPLY10" gate="1" x="50.8" y="-58.42"/>
 <instance part="R9" gate="G$1" x="109.22" y="-7.62" rot="R90"/>
-<instance part="R1" gate="G$1" x="-55.88" y="-86.36" rot="R180"/>
 <instance part="C14" gate="G$1" x="104.14" y="63.5" rot="R90"/>
 <instance part="U6" gate="G$1" x="101.6" y="45.72"/>
 <instance part="SUPPLY11" gate="1" x="121.92" y="35.56"/>
@@ -3694,7 +3490,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <instance part="R14" gate="G$1" x="-27.94" y="-38.1" rot="R90"/>
 <instance part="J3" gate="G$1" x="-40.64" y="-7.62"/>
 <instance part="SUPPLY8" gate="1" x="-33.02" y="-12.7"/>
-<instance part="U7" gate="G$1" x="-78.74" y="-86.36"/>
 <instance part="J1" gate="G$1" x="-73.66" y="-2.54" smashed="yes">
 <attribute name="NAME" x="-78.74" y="6.35" size="1.778" layer="95"/>
 </instance>
@@ -3706,6 +3501,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <attribute name="NAME" x="-13.208" y="-35.687" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="-11.43" y="-38.481" size="1.778" layer="96" rot="R180"/>
 </instance>
+<instance part="U$1" gate="G$1" x="-78.74" y="-86.36"/>
 </instances>
 <busses>
 </busses>
@@ -3936,13 +3732,6 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="73.66" y="40.64" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
-<net name="N$1" class="0">
-<segment>
-<wire x1="-63.5" y1="-86.36" x2="-60.96" y2="-86.36" width="0.1524" layer="91"/>
-<pinref part="R1" gate="G$1" pin="2"/>
-<pinref part="U7" gate="G$1" pin="W"/>
-</segment>
-</net>
 <net name="WE" class="0">
 <segment>
 <pinref part="U3" gate="G$1" pin="WE"/>
@@ -3950,16 +3739,16 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <label x="-96.52" y="48.26" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 <segment>
-<pinref part="R1" gate="G$1" pin="1"/>
-<wire x1="-50.8" y1="-86.36" x2="-45.72" y2="-86.36" width="0.1524" layer="91"/>
-<label x="-45.72" y="-86.36" size="1.778" layer="95" xref="yes"/>
+<pinref part="U$1" gate="G$1" pin="W"/>
+<wire x1="-63.5" y1="-86.36" x2="-60.96" y2="-86.36" width="0.1524" layer="91"/>
+<label x="-60.96" y="-86.36" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 <net name="CE" class="0">
 <segment>
 <label x="-60.96" y="-93.98" size="1.778" layer="95" xref="yes"/>
 <wire x1="-63.5" y1="-93.98" x2="-60.96" y2="-93.98" width="0.1524" layer="91"/>
-<pinref part="U7" gate="G$1" pin="C"/>
+<pinref part="U$1" gate="G$1" pin="C"/>
 </segment>
 <segment>
 <pinref part="U3" gate="G$1" pin="CE"/>
@@ -3971,7 +3760,7 @@ Standard 2-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <segment>
 <label x="-60.96" y="-78.74" size="1.778" layer="95" xref="yes"/>
 <wire x1="-63.5" y1="-78.74" x2="-60.96" y2="-78.74" width="0.1524" layer="91"/>
-<pinref part="U7" gate="G$1" pin="R"/>
+<pinref part="U$1" gate="G$1" pin="R"/>
 </segment>
 <segment>
 <pinref part="U3" gate="G$1" pin="RE"/>
