@@ -5,7 +5,9 @@
 #include "app_error.h"
 #include "nrf_gpio.h"
 #include "nrf_gpiote.h"
+#include "nrf_delay.h"
 #include "nrf51_bitfields.h"
+#include "battery.h"
 #include "ble.h"
 #include "ble_hci.h"
 #include "ble_srv_common.h"
@@ -46,7 +48,7 @@ static app_timer_id_t rebaseTimer;
 #define APP_BEACON_DATA			0x42, 0x68, 0x86, 0x34, 0x56
 #define APP_ID					0x43
 
-#define PRESSURE_THRESHOLD			1000 //PA
+#define PRESSURE_THRESHOLD			500 //PA
 
 static uint8_t m_beacon_info[APP_BEACON_INFO_LENGTH] =
 {
@@ -72,7 +74,7 @@ static void service_error_handler(uint32_t);
 static void timers_init(void);
 static void notifyTimerStart(void);
 static void notifyTimerStop(void);
-static void rebaseTimerStart(void);
+static void rebaseTimerStart(uint32_t rate);
 static void rebaseTimerStop(void);
 static void gap_params_init(void);
 static void services_init(void);
@@ -84,6 +86,8 @@ static void sys_evt_dispatch(uint32_t);
 static void on_ble_evt(ble_evt_t * p_ble_evt);
 static void advertising_init(void);
 static void conn_params_init(void);
+static void disablePeripherals(void);
+static void enablePeripherals(void);
 
 void rebaseHandler(void* p_context);
 //void protocol_write_handler(ble_auth_t* auth, uint8_t protocol);
@@ -98,13 +102,15 @@ static void advertisingStop();
 static void connectedStart();
 static void connectedStop();
 static void sleepStart();
+static void sleepHandle();
 static void sleepStop();
 static void bleInit();
+
+static bool rebaseTimerStarted = false;
 
 //global function implementation
 void appService(void) {
 
-	//power_manage();
 
 	switch(bleState) {
 		case NONE:
@@ -141,14 +147,33 @@ void appService(void) {
 				advertisingStart();
 				bleState = ADVERTISING;	
 			} else {
-				sleepStart();
+				sleepHandle();
 			}
 		break;
 	}
+
+	power_manage();
 }
 
 void advertisingStop(void) {
-	
+	ledOff(LED_1);	
+}
+
+static void disablePeripherals(void) {
+	setGasInactive();
+	setPressureInactive();
+
+	//disable twi
+	NRF_TWI1->ENABLE = TWI_ENABLE_ENABLE_Disabled << TWI_ENABLE_ENABLE_Pos;
+	NRF_TWI0->ENABLE = TWI_ENABLE_ENABLE_Disabled << TWI_ENABLE_ENABLE_Pos;
+}
+
+static void enablePeripherals(void) {
+	NRF_TWI1->ENABLE = TWI_ENABLE_ENABLE_Enabled << TWI_ENABLE_ENABLE_Pos;
+	NRF_TWI0->ENABLE = TWI_ENABLE_ENABLE_Enabled << TWI_ENABLE_ENABLE_Pos;
+	//NRF_TWI0->ENABLE = 5;
+	setGasActive();
+	setPressureActive();
 }
 
 static void setGPIOTE(void) {
@@ -159,43 +184,85 @@ static void setGPIOTE(void) {
 	NVIC_EnableIRQ(GPIOTE_IRQn);
 }
 
-void sleepStart(void) {
-	ledOff(LED_1);
-	ledOff(LED_3);
-
-	//put gas to sleep
-	setGasInactive();
+static void sleepHandle(void) {
+	
+	static bool wasCharged = false;
+	bool charged = isCharged();
+	
+	setPressureActive();
 
 	//put pressure to sleep and set threshold
 	uint32_t currPress = getPressure();
 	currPress += PRESSURE_THRESHOLD;
 	setPressureThreshold(currPress);
+
 	setPressureInactive();
 
-	//disable twi
-	//NRF_TWI0->ENABLE = 0;
-	NRF_TWI1->ENABLE = TWI_ENABLE_ENABLE_Disabled << TWI_ENABLE_ENABLE_Pos;
-	NRF_TWI0->ENABLE = TWI_ENABLE_ENABLE_Disabled << TWI_ENABLE_ENABLE_Pos;
+
+	if(charged && !wasCharged) {
+		uint32_t rebaseRate = APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER);
+		ledOn(LED_3);
+		nrf_delay_us(10000);
+		ledOff(LED_3);
+
+		rebaseTimerStart(rebaseRate);
+
+		wasCharged = true;
+
+	} else if(charged) {
+		ledOn(LED_3);
+		nrf_delay_us(10000);
+		ledOff(LED_3);
+
+	} else if(wasCharged && !charged) {
+		uint32_t rebaseRate = APP_TIMER_TICKS(60000, APP_TIMER_PRESCALER);
+		rebaseTimerStart(rebaseRate);
+		wasCharged = false;
+	} else {
+		ledOff(LED_3);
+	}
+
+	__WFE();
+
+}
+
+void sleepStart(void) {
+	//determine charging
+	uint32_t rebaseRate;
+	
+
+	if(isCharged()) {
+		rebaseRate = APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER);
+		ledOn(LED_3);
+		nrf_delay_us(10000);
+		ledOff(LED_3);
+	} else {
+		rebaseRate = APP_TIMER_TICKS(60000, APP_TIMER_PRESCALER);
+		ledOff(LED_3);
+	}
+	
+	setPressureActive();
+
+	//put pressure to sleep and set threshold
+	uint32_t currPress = getPressure();
+	currPress += PRESSURE_THRESHOLD;
+	setPressureThreshold(currPress);
+
+	setPressureInactive();
 
 	//setup RTC1 interrupt and pressure interrupts
-	rebaseTimerStart();
+	rebaseTimerStart(rebaseRate);
 	nrf_gpio_cfg_sense_input(PINT, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
 	setGPIOTE();
 
 	//WAITFORINTERRUPTS
-	__WFI();
+	__WFE();
 }
 
 void rebaseHandler(void* p_context) {
-	rebaseTimerStop();
-	nextBleState = ADVERTISING;
+	//state machine will handle
 }
 
-/*void RTC1_IRQHandler() {
-	if(NRF_RTC1->EVENTS_COMPARE[0] != 0) {
-		NVIC_DisableIRQ(RTC1_IRQn);
-	}
-}*/
 
 void GPIOTE_IRQHandler() {
 
@@ -207,24 +274,25 @@ void GPIOTE_IRQHandler() {
 }
 
 void sleepStop(void) {
-	NRF_TWI1->ENABLE = TWI_ENABLE_ENABLE_Enabled << TWI_ENABLE_ENABLE_Pos;
-	NRF_TWI0->ENABLE = TWI_ENABLE_ENABLE_Enabled << TWI_ENABLE_ENABLE_Pos;
-	//NRF_TWI0->ENABLE = 5;
-	setGasActive();
-	setPressureActive();
+	rebaseTimerStop();
 }
 
 void connectedStart(void) {
+	enablePeripherals();
+	notifyTimerStart();	
 }
 
 void connectedStop(void) {
-	
+	notifyTimerStop();
+	disablePeripherals();
 }
 
 void appInit() {
 	gasInit();
 	pressureInit();
 	ledInit();
+	batteryInit();
+	disablePeripherals();
 	bleInit();
 }
 
@@ -241,11 +309,10 @@ void bleInit() {
 
 void advertisingStart(void) {
 	
-	ledOn(LED_1);
-	ledOn(LED_3);
 
 	//start advertising
     uint32_t             err_code;
+	ledOn(LED_1);
     err_code = sd_ble_gap_adv_start(&m_adv_params);
     APP_ERROR_CHECK(err_code);
 }
@@ -300,18 +367,22 @@ static void advertising_init(void)
 
 void notifyHandler(void* p_context) {
 	static uint8_t i = 0;
-	static bool notifyPress = false;
-	queuePush(getGasSample());	
+	//static bool notifyPress = false;
+	//queuePush(getGasSample());	
 	
-	if(!(i%10)) {
-		ble_co_on_gas_change(&m_co, convertSampleToPPM((uint32_t)queueAverage()));
-		//ble_co_on_press_change(&m_co, getPressure());
-		notifyPress = true;
-	} else if (notifyPress) {
-		ble_co_on_press_change(&m_co, getPressure());
-		notifyPress = false;
+	/*if(i < 10) {
+		//bleCoNotifyGas(&m_co, convertSampleToPPM((uint32_t)queueAverage()));
+		bleCoNotifyGas(&m_co, getGasSample());
+	} else if (i == 10) {
+		bleCoNotifyPress(&m_co, getPressure());
 	}
 	i++;
+	if(i > 10) {
+		i = 0;
+	}*/
+	bleCoNotifyPress(&m_co, getPressure());
+	bleCoNotifyGas(&m_co, getGasSample());
+	//bleCoNotifyGas(&m_co, getBatteryPercentage());
 }
 
 static void timers_init(void)
@@ -319,21 +390,19 @@ static void timers_init(void)
     // Initialize timer module, making it use the scheduler
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
 
-    
-	uint32_t err_code = app_timer_create(&notifyTimer, APP_TIMER_MODE_REPEATED, notifyHandler);
+	uint32_t err_code = app_timer_create(&rebaseTimer, APP_TIMER_MODE_REPEATED, rebaseHandler);
     APP_ERROR_CHECK(err_code); 
-
-	err_code = app_timer_create(&rebaseTimer, APP_TIMER_MODE_REPEATED, rebaseHandler);
+    
+	err_code = app_timer_create(&notifyTimer, APP_TIMER_MODE_REPEATED, notifyHandler);
     APP_ERROR_CHECK(err_code); 
 }
 
-static void rebaseTimerStart(void) {
-	uint32_t err_code = app_timer_start(rebaseTimer, REBASE_RATE, NULL);
+static void rebaseTimerStart(uint32_t rate) {
+	uint32_t err_code = app_timer_start(rebaseTimer, rate, NULL);
 	APP_ERROR_CHECK(err_code);
 }
 
 static void rebaseTimerStop(void) {
-	
 	uint32_t err_code = app_timer_stop(rebaseTimer);
 	APP_ERROR_CHECK(err_code);
 }
@@ -355,7 +424,7 @@ static void notifyTimerStop(void) {
 static void gap_params_init(void)
 {
     uint32_t                err_code;
-    //ble_gap_conn_params_t   gap_conn_params;
+    ble_gap_conn_params_t   gap_conn_params;
     ble_gap_conn_sec_mode_t sec_mode;
 	
 	sd_ble_gap_tx_power_set(4);
@@ -367,18 +436,18 @@ static void gap_params_init(void)
                                           strlen(DEVICE_NAME));
     APP_ERROR_CHECK(err_code);
 
-    //err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_GENERIC_COMPUTER);
-    //APP_ERROR_CHECK(err_code);
+    err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_GENERIC_COMPUTER);
+    APP_ERROR_CHECK(err_code);
 
-    //memset(&gap_conn_params, 0, sizeof(gap_conn_params));
+    memset(&gap_conn_params, 0, sizeof(gap_conn_params));
 
-    //gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
-    //gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
-    //gap_conn_params.slave_latency     = SLAVE_LATENCY;
-    //gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
+    gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
+    gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
+    gap_conn_params.slave_latency     = SLAVE_LATENCY;
+    gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
 
-    //err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
-    //APP_ERROR_CHECK(err_code);
+    err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
+    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -484,10 +553,12 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
     {
         case BLE_GAP_EVT_CONNECTED:
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+			nextBleState = CONNECTED;
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
+			nextBleState = SLEEPING;
             break;
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:

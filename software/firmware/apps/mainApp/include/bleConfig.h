@@ -10,28 +10,26 @@
 #define DEVICE_NAME "Monoxalyze"
 
 //advertising intervale = 64*0.625ms = 40ms
-#define APP_ADV_INTERVAL                MSEC_TO_UNITS(500, UNIT_0_625_MS)
+#define APP_ADV_INTERVAL                MSEC_TO_UNITS(20, UNIT_0_625_MS)
 
 #define APP_COMPANY_IDENTIFIER			0x11BB
 
 //advertising timeout sec
-#define APP_ADV_TIMEOUT_IN_SECONDS      20 
+#define APP_ADV_TIMEOUT_IN_SECONDS      20
 
 //RTC1_Prescale
-#define APP_TIMER_PRESCALER             4095
+#define APP_TIMER_PRESCALER             50
 
 #define APP_TIMER_MAX_TIMERS            4
 
 //size of op queues
-#define APP_TIMER_OP_QUEUE_SIZE         4
+#define APP_TIMER_OP_QUEUE_SIZE         20
 
-#define NOTIFY_RATE						APP_TIMER_TICKS(50, APP_TIMER_PRESCALER)
-
-#define REBASE_RATE						APP_TIMER_TICKS(60000, APP_TIMER_PRESCALER)
+#define NOTIFY_RATE						APP_TIMER_TICKS(20, APP_TIMER_PRESCALER)
 
 
 //500ms
-#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(500, UNIT_1_25_MS)
+#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(10, UNIT_1_25_MS)
 
 //1s
 #define MAX_CONN_INTERVAL               MSEC_TO_UNITS(1000, UNIT_1_25_MS)
