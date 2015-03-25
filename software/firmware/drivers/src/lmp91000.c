@@ -5,6 +5,7 @@
 #include "lmp91000.h"
 #include "twi_master.h"
 #include "adc.h"
+#include "sensorConfig.h"
 
 
 //I2C address
@@ -24,7 +25,16 @@
 #define REF_SOURCE  0x01
 #define INT_Z       0x00
 #define BIAS_SIGN   0x01
-#define BIAS        0x01
+
+/*
+#ifdef GAS_BIASED
+	#define BIAS		0x01
+#else
+	#define BIAS        0x00
+#endif */
+
+#define BIAS 0x00
+
 
 
 //lock and unlock register protection
@@ -44,9 +54,9 @@ uint8_t gasInit() {
     err = ctrlUnlock();
     err = setTIA();
     err = setREF();
-    //err = ctrlLock();
 
-    err = setGasActive();
+	uint8_t down[2] = {MODECN, 0x03};
+	twi_master_transfer(GAS_ADDRESS, down, 2, true);
 
 	if(err != 1)
 		return 1;
@@ -73,16 +83,28 @@ uint32_t convertSampleToPPM(uint32_t sample) {
 }
 
 uint8_t setGasInactive() {
-	//fet short deep sleep
-    uint8_t down[2] = {MODECN, 0x80};
-    return twi_master_transfer(GAS_ADDRESS, down, 2, true);
+	
+	#ifdef GAS_ALWAYS_ON
+		//always leave the gas sensor on so don't turn it on deep sleep
+		//constantly uses ~10uA
+		return 1;
+	#else
+		//deep sleep
+		uint8_t down[2] = {MODECN, 0x00};
+		return twi_master_transfer(GAS_ADDRESS, down, 2, true);
+	#endif
 }
 
 
 
 uint8_t setGasActive() {
-    uint8_t down[2] = {MODECN, 0x03};
-    return twi_master_transfer(GAS_ADDRESS, down, 2, true);
+	
+	#ifdef GAS_ALWAYS_ON
+		return 1;
+	#else
+		uint8_t down[2] = {MODECN, 0x03};
+		return twi_master_transfer(GAS_ADDRESS, down, 2, true);
+	#endif
 }
 
 static uint8_t ctrlUnlock() {

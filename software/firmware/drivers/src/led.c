@@ -9,6 +9,7 @@ uint8_t ledInit() {
     nrf_gpio_cfg_output(LED_1);
     nrf_gpio_cfg_output(LED_2);
     nrf_gpio_cfg_output(LED_3);
+    nrf_gpio_cfg_output(TESTSQ);
 
     NRF_RNG->TASKS_START = 1;
     NRF_RNG->EVENTS_VALRDY = 0;

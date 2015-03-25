@@ -54,8 +54,11 @@ void setPressureThreshold(uint32_t p) {
 
 //returns differential pressure in Pa
 uint32_t getPressure(void) {
+    return (uint32_t)(getRawPressure()/40.96);
+}
 
-    //write to the slave address to the subbaddress
+uint32_t getRawPressure(void) {
+	//write to the slave address to the subbaddress
 	uint8_t toWrite[2] = {CTRL_REG2, 0x11};
 	twi_master_transfer(PRESS_ADDRESS, toWrite, 2, true);
 
@@ -70,12 +73,11 @@ uint32_t getPressure(void) {
     //calculate pressurea
     uint32_t pressPa = 0x00;
     pressPa = (press[2] << 16) | (press[1] << 8) | press[0];
-    
-    return (uint32_t)pressPa/40.96;
-	//return pressPa;
+	
+	return pressPa;
 }
 
-uint16_t getTemp(void) {
+uint16_t getRawTemp(void) {
 	uint8_t toWrite[2] = {CTRL_REG2, 0x11};
 	twi_master_transfer(PRESS_ADDRESS, toWrite, 2, true);
 
@@ -92,6 +94,11 @@ uint16_t getTemp(void) {
     
 	return tempOut;
 
+}
+
+float getTemp(void) {
+	int16_t raw = (int16_t)getRawTemp();
+	return 42.5+(raw/480);
 }
 
 static void setupPressure(void) {
