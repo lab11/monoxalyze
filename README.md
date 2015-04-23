@@ -1,26 +1,26 @@
-Putting the IT in QuIT Smoking
+Monoxalyze
 ==============================
 
-The smoking cessation project uses smartphones and low power sensors to
-provide a compliance mechanism for smoking cessation programs.
+![Monoxalyze Device](https://raw.githubusercontent.com/lab11/monoxalyze/master/media/compare_for_media.jpg)
 
-In the United States alone, cigarette smoking is responsible for more than
-480,000 deaths each year. While over 68% of smokers wish to quit smoking,
-less than 7% are successful. In response to this high failure rate, programs
-that offer incentives for smokers to quit have been proposed. Unfortunately,
-these programs depend on unreliable, self-reported data to determine a
-participant's compliance. The smoking cessation project aims to offer a 
-better compliance mechanism for incentive programs.
+Worldwide, over one billion people regularly smoke cigarettes.
+Smoking is a major public health threat for both smokers
+and non-smokers alike, and reducing the number of smokers
+would be a significant societal benefit. Most current smokers
+would like to quit, but the addictive nature of cigarettes makes
+quitting difficult. Research has shown that the success of a
+quit attempt increases greatly with third party intervention,
+however intervention methods rely on a smoking-cessation
+reporting mechanism, and evidence indicates that smokers
+are unreliable at self-reporting.
 
-Because cigarette smoke contains carbon monoxide (CO), the absence of CO from
-a program participant's breath offers reliable evidence of compliance with a
-smoking cessation program.
-
-We are building carbon monoxide meters that can discriminate between a smoker
-and a non-smoker by measuring CO in a person's breath. Our goal is to create
-devices that are small enough to carry in a pocket. These devices could then 
-pair with a smartphone that 
-can process and report readings, while also identifying the user of the device.
-
-
-
+To solve this problem, we have created Monoxalyze, a keychain-
+sized smoking-cessation verification device. Monoxalzye is a
+Bluetooth Low Energy (BLE) carbon monoxide breathalyzer
+that pairs with a smartphone to track whether smokers have
+quit—or not. Monoxalyze identifies the user through facial recognition
+on the smartphone, and Monalyze authenticates the Monoxalyze
+through visible light authentication between LEDs on the front of the Monoxalyze
+device and the smartphone's camera. Monoxalyze also uses an internal pressure
+sensor as a wakeup mechanism and to verify that a user is actually exhaling
+through the Monoxalyze deivce.
