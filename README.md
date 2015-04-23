@@ -19,7 +19,7 @@ sized smoking-cessation verification device. Monoxalzye is a
 Bluetooth Low Energy (BLE) carbon monoxide breathalyzer
 that pairs with a smartphone to track whether smokers have
 quit—or not. Monoxalyze identifies the user through facial recognition
-on the smartphone, and Monalyze authenticates the Monoxalyze
+on the smartphone, and Monalyze authenticates the Monoxalyze device
 through visible light authentication between LEDs on the front of the Monoxalyze
 device and the smartphone's camera. Monoxalyze also uses an internal pressure
 sensor as a wakeup mechanism and to verify that a user is actually exhaling
