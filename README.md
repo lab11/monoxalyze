@@ -15,7 +15,7 @@ reporting mechanism, and evidence indicates that smokers
 are unreliable at self-reporting.
 
 To solve this problem, we have created Monoxalyze, a keychain-
-sized smoking-cessation verification device. Monoxalzye is a
+sized smoking-cessation verification device. Monoxalyze is a
 Bluetooth Low Energy (BLE) carbon monoxide breathalyzer
 that pairs with a smartphone to track whether smokers have
 quit—or not. Monoxalyze identifies the user through facial recognition
