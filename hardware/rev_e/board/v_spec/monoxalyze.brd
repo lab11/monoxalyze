@@ -145,7 +145,7 @@
 <wire x1="20" y1="50" x2="0" y2="50" width="0" layer="20"/>
 <wire x1="0" y1="50" x2="0" y2="0" width="0" layer="20"/>
 <text x="19.05" y="44.35" size="0.6096" layer="26" font="vector" rot="MR0">MONOXALYZE</text>
-<text x="19" y="43.7" size="0.6096" layer="26" font="vector" rot="MR0">REV_D</text>
+<text x="19" y="43.7" size="0.6096" layer="26" font="vector" rot="MR0">REV_E</text>
 <text x="19.05" y="43.05" size="0.6096" layer="26" font="vector" rot="MR0">JOSHUA ADKINS</text>
 <text x="19.05" y="42.35" size="0.6096" layer="26" font="vector" rot="MR0">03/2015</text>
 <text x="14.2" y="27" size="1.016" layer="26" font="vector" rot="MR0">+</text>
