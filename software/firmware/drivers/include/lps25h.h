@@ -9,6 +9,7 @@ uint8_t pressureInit(void);
 
 //sets the interrupt pressure threshold in Pa
 void setPressureThreshold(uint32_t);
+void setPressureAutozero(void);
 
 //sets the reference pressure in Pa
 void setPressureReference(uint32_t);

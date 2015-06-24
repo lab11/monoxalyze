@@ -39,6 +39,11 @@ uint8_t pressureInit() {
 	return 0;
 }
 
+void setPressureAutozero(void) {
+	uint8_t ctr2[2] = {CTRL_REG2, 0x52};
+    twi_master_transfer(PRESS_ADDRESS, ctr2, 2, true);
+}
+
 //sets the interrupt pressure threshold in Pa
 void setPressureThreshold(uint32_t p) {
 	p = p/100;
@@ -115,11 +120,9 @@ static void setupPressure(void) {
 	uint8_t resc[2] = {RES_CONF, 0x00};
     twi_master_transfer(PRESS_ADDRESS, resc, 2, true);
 
-	//noctrl4 changes
 
-
-	//pressure high interrupt
-	uint8_t intcfg[2] = {INT_CFG, 0x01};
+	//pressure high and low interrupt
+	uint8_t intcfg[2] = {INT_CFG, 0x03};
     twi_master_transfer(PRESS_ADDRESS, intcfg, 2, true);
 
 	//mean mode 2 sample moving average

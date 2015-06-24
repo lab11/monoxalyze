@@ -20,11 +20,10 @@
 #include "ble_co.h"
 #include "lmp91000.h"
 #include "lps25h.h"
+#include "si7021.h"
 #include "led.h"
 #include "pins.h"
 #include "queue.h"
-//#include "ble_bas.h"
-//#include "ble_auth.h"
 
 //module-private variable declarations
 
@@ -33,14 +32,10 @@ static ble_gap_sec_params_t             m_sec_params;
 //current connection handle
 static uint16_t 		m_conn_handle = BLE_CONN_HANDLE_INVALID; 
 static ble_co_t			m_co;
-//static ble_auth_t	m_auth;
-//static ble_bas_t	m_bas;
-//static ble_bas_init_t m_bas_init;
 
 static ble_advdata_t advdata;
 static ble_gap_adv_params_t m_adv_params;
-static app_timer_id_t notifyTimer;
-static app_timer_id_t rebaseTimer;
+static app_timer_id_t updateTimer;
 
 #define APP_BEACON_INFO_LENGTH 	0x09
 #define APP_ADV_DATA_LENGTH		0x07
@@ -48,7 +43,7 @@ static app_timer_id_t rebaseTimer;
 #define APP_BEACON_DATA			0x42, 0x68, 0x86, 0x34, 0x56
 #define APP_ID					0x43
 
-#define PRESSURE_THRESHOLD			500 //PA
+#define PRESSURE_THRESHOLD			300 //PA
 
 static uint8_t m_beacon_info[APP_BEACON_INFO_LENGTH] =
 {
@@ -72,10 +67,8 @@ volatile BLE_STATE nextBleState = ADVERTISING;
 void assert_nrf_callback(uint16_t, const uint8_t*);
 static void service_error_handler(uint32_t);
 static void timers_init(void);
-static void notifyTimerStart(void);
-static void notifyTimerStop(void);
-static void rebaseTimerStart(uint32_t rate);
-static void rebaseTimerStop(void);
+static void updateTimerStart(void);
+static void updateTimerStop(void);
 static void gap_params_init(void);
 static void services_init(void);
 static void sec_params_init(void);
@@ -89,14 +82,6 @@ static void conn_params_init(void);
 static void disablePeripherals(void);
 static void enablePeripherals(void);
 
-void rebaseHandler(void* p_context);
-//void protocol_write_handler(ble_auth_t* auth, uint8_t protocol);
-//void len_write_handler(ble_auth_t* auth, uint16_t len);
-//void data_write_handler(ble_auth_t* auth, uint8_t* dataArray);
-//void start_write_handler(ble_auth_t* auth, uint8_t start);
-//void pass_write_handler(ble_auth_t* auth, uint8_t pass);
-//void retry_write_handler(ble_auth_t* auth, uint8_t retry);
-
 static void advertisingStart();
 static void advertisingStop();
 static void connectedStart();
@@ -106,7 +91,6 @@ static void sleepHandle();
 static void sleepStop();
 static void bleInit();
 
-static bool rebaseTimerStarted = false;
 
 //global function implementation
 void appService(void) {
@@ -142,13 +126,10 @@ void appService(void) {
 			}
 		break;
 		case SLEEPING:
-			if(nextBleState == ADVERTISING) {
-				sleepStop();
-				advertisingStart();
-				bleState = ADVERTISING;	
-			} else {
-				sleepHandle();
-			}
+			//we woke up from sleep so we must be advertising
+			advertisingStart();
+			nextBleState = ADVERTISING;
+			bleState = ADVERTISING;	
 		break;
 	}
 
@@ -184,74 +165,13 @@ static void setGPIOTE(void) {
 	NVIC_EnableIRQ(GPIOTE_IRQn);
 }
 
-static void sleepHandle(void) {
-	
-	static bool wasCharged = false;
-	bool charged = isCharged();
-	
-	setPressureActive();
-
-	//put pressure to sleep and set threshold
-	uint32_t currPress = getPressure();
-	currPress += PRESSURE_THRESHOLD;
-	setPressureThreshold(currPress);
-
-	setPressureInactive();
-
-
-	if(charged && !wasCharged) {
-		uint32_t rebaseRate = APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER);
-		ledOn(LED_3);
-		nrf_delay_us(10000);
-		ledOff(LED_3);
-
-		rebaseTimerStart(rebaseRate);
-
-		wasCharged = true;
-
-	} else if(charged) {
-		ledOn(LED_3);
-		nrf_delay_us(10000);
-		ledOff(LED_3);
-
-	} else if(wasCharged && !charged) {
-		uint32_t rebaseRate = APP_TIMER_TICKS(60000, APP_TIMER_PRESCALER);
-		rebaseTimerStart(rebaseRate);
-		wasCharged = false;
-	} else {
-		ledOff(LED_3);
-	}
-
-	__WFE();
-
-}
-
 void sleepStart(void) {
-	//determine charging
-	uint32_t rebaseRate;
-	
 
-	if(isCharged()) {
-		rebaseRate = APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER);
-		ledOn(LED_3);
-		nrf_delay_us(10000);
-		ledOff(LED_3);
-	} else {
-		rebaseRate = APP_TIMER_TICKS(60000, APP_TIMER_PRESCALER);
-		ledOff(LED_3);
-	}
-	
-	setPressureActive();
-
-	//put pressure to sleep and set threshold
-	uint32_t currPress = getPressure();
-	currPress += PRESSURE_THRESHOLD;
-	setPressureThreshold(currPress);
-
+	setPressureThreshold(PRESSURE_THRESHOLD);
+	setPressureAutozero();
 	setPressureInactive();
 
-	//setup RTC1 interrupt and pressure interrupts
-	rebaseTimerStart(rebaseRate);
+	//setup the interrupt pin
 	nrf_gpio_cfg_sense_input(PINT, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
 	setGPIOTE();
 
@@ -259,31 +179,22 @@ void sleepStart(void) {
 	__WFE();
 }
 
-void rebaseHandler(void* p_context) {
-	//state machine will handle
-}
-
 
 void GPIOTE_IRQHandler() {
 
 	if(NRF_GPIOTE->EVENTS_PORT != 0) {
-		nextBleState = ADVERTISING;
 		NVIC_DisableIRQ(RTC1_IRQn);
 		NVIC_DisableIRQ(GPIOTE_IRQn);
 	}
 }
 
-void sleepStop(void) {
-	rebaseTimerStop();
-}
-
 void connectedStart(void) {
 	enablePeripherals();
-	notifyTimerStart();	
+	updateTimerStart();	
 }
 
 void connectedStop(void) {
-	notifyTimerStop();
+	updateTimerStop();
 	disablePeripherals();
 }
 
@@ -308,8 +219,6 @@ void bleInit() {
 }
 
 void advertisingStart(void) {
-	
-
 	//start advertising
     uint32_t             err_code;
 	ledOn(LED_1);
@@ -365,57 +274,34 @@ static void advertising_init(void)
 
 //initialize timers
 
-void notifyHandler(void* p_context) {
-	static uint8_t i = 0;
-	//static bool notifyPress = false;
-	//queuePush(getGasSample());	
-	
-	/*if(i < 10) {
-		//bleCoNotifyGas(&m_co, convertSampleToPPM((uint32_t)queueAverage()));
-		bleCoNotifyGas(&m_co, getGasSample());
-	} else if (i == 10) {
-		bleCoNotifyPress(&m_co, getPressure());
-	}
-	i++;
-	if(i > 10) {
-		i = 0;
-	}*/
-	bleCoNotifyPress(&m_co, getPressure());
-	bleCoNotifyGas(&m_co, getGasSample());
-	//bleCoNotifyGas(&m_co, getBatteryPercentage());
+void updateHandler(void* p_context) {
+
+	bleCoUpdatePress(&m_co, getPressure());
+	bleCoUpdateGas(&m_co, getGasSample());
+	bleCoUpdateTemp(&m_co, si7021GetTemperature());
+	bleCoUpdateHumidity(&m_co, si7021GetHumidity());
 }
 
 static void timers_init(void)
 {
+	uint32_t err_code;	
+
     // Initialize timer module, making it use the scheduler
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
 
-	uint32_t err_code = app_timer_create(&rebaseTimer, APP_TIMER_MODE_REPEATED, rebaseHandler);
-    APP_ERROR_CHECK(err_code); 
-    
-	err_code = app_timer_create(&notifyTimer, APP_TIMER_MODE_REPEATED, notifyHandler);
+	err_code = app_timer_create(&updateTimer, APP_TIMER_MODE_REPEATED, updateHandler);
     APP_ERROR_CHECK(err_code); 
 }
 
-static void rebaseTimerStart(uint32_t rate) {
-	uint32_t err_code = app_timer_start(rebaseTimer, rate, NULL);
-	APP_ERROR_CHECK(err_code);
-}
-
-static void rebaseTimerStop(void) {
-	uint32_t err_code = app_timer_stop(rebaseTimer);
-	APP_ERROR_CHECK(err_code);
-}
-
-static void notifyTimerStart(void)
+static void updateTimerStart(void)
 {
-	uint32_t err_code = app_timer_start(notifyTimer, NOTIFY_RATE, NULL);
+	uint32_t err_code = app_timer_start(updateTimer, NOTIFY_RATE, NULL);
 	APP_ERROR_CHECK(err_code);
 }
 
-static void notifyTimerStop(void) {
+static void updateTimerStop(void) {
 
-	uint32_t err_code = app_timer_stop(notifyTimer);
+	uint32_t err_code = app_timer_stop(updateTimer);
 	APP_ERROR_CHECK(err_code);
 }
 
@@ -469,22 +355,16 @@ static void services_init(void)
 	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_press_attr_md.read_perm);
 	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_press_attr_md.write_perm);
 
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&co_init.co_temp_attr_md.cccd_write_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_temp_attr_md.read_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_temp_attr_md.write_perm);
+
+	BLE_GAP_CONN_SEC_MODE_SET_OPEN(&co_init.co_humidity_attr_md.cccd_write_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_humidity_attr_md.read_perm);
+	BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&co_init.co_humidity_attr_md.write_perm);
+
 	err_code = ble_co_init(&m_co, &co_init);
 	APP_ERROR_CHECK(err_code);
-
-	/*ble_auth_init_t authInit;
-	authInit.protocol_write_handler = protocol_write_handler;
-	authInit.len_write_handler 		= len_write_handler;
-	authInit.data_write_handler 	= data_write_handler;
-	authInit.start_write_handler 	= start_write_handler;
-	authInit.pass_write_handler 	= pass_write_handler;
-	authInit.retry_write_handler 	= retry_write_handler;*/
-
-	//err_code = ble_auth_init(&m_auth, &authInit);
-	//APP_ERROR_CHECK(err_code);
-
-	//err_code = ble_bas_init(&m_bas, &m_bas_init);
-	//APP_ERROR_CHECK(err_code);
 }
 
 
@@ -618,6 +498,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     */
 
 	ble_co_on_ble_evt(&m_co, p_ble_evt);
+	//ble_auth_on_ble_evt(&m_auth, p_ble_evt);
 }
 
 
@@ -667,24 +548,4 @@ static void power_manage(void)
     uint32_t err_code = sd_app_evt_wait();
     APP_ERROR_CHECK(err_code);
 }
-
-/*
-void protocol_write_handler(ble_auth_t* auth, uint8_t protocol){
-
-}
-void len_write_handler(ble_auth_t* auth, uint16_t len){
-
-}
-void data_write_handler(ble_auth_t* auth, uint8_t* dataArray){
-
-}
-void start_write_handler(ble_auth_t* auth, uint8_t start){
-
-}
-void pass_write_handler(ble_auth_t* auth, uint8_t pass){
-
-}
-void retry_write_handler(ble_auth_t* auth, uint8_t retry){
-
-}*/
 

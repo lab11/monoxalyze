@@ -24,3 +24,11 @@ void ledOff(uint8_t led) {
 void ledToggle(uint8_t led) {
     nrf_gpio_pin_toggle(led);
 }
+
+void ledSet(uint8_t led, uint8_t on) {
+	if(on) {
+    	nrf_gpio_pin_set(led);
+	} else {
+		nrf_gpio_pin_clear(led);
+	}
+}

@@ -5,7 +5,7 @@
 //#define BLE_UUID_LED_SERVICE 1
 
 //cannot change server database if -
-#define IS_SRVC_CHANGED_CHARACT_PRESENT 0
+#define IS_SRVC_CHANGED_CHARACT_PRESENT 1
 
 #define DEVICE_NAME "Monoxalyze"
 
@@ -25,7 +25,7 @@
 //size of op queues
 #define APP_TIMER_OP_QUEUE_SIZE         20
 
-#define NOTIFY_RATE						APP_TIMER_TICKS(20, APP_TIMER_PRESCALER)
+#define NOTIFY_RATE						APP_TIMER_TICKS(50, APP_TIMER_PRESCALER)
 
 
 //500ms
