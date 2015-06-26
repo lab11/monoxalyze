@@ -134,8 +134,7 @@ static uint32_t gas_char_add(ble_co_t* co, const ble_co_init_t * co_init) {
     char_md.p_cccd_md         = &cccd_md;
     char_md.p_sccd_md         = NULL;
 
-	ble_uuid.type = co->uuid_type;
-	ble_uuid.uuid = CO_UUID_GAS_CHAR;
+	BLE_UUID_BLE_ASSIGN(ble_uuid, CO_UUID_GAS_CHAR);
 
 	memset(&attr_md, 0, sizeof(attr_md));
 
@@ -183,8 +182,8 @@ static uint32_t humidity_char_add(ble_co_t* co, const ble_co_init_t * co_init) {
     char_md.p_cccd_md         = &cccd_md;
     char_md.p_sccd_md         = NULL;
 
-	ble_uuid.type = co->uuid_type;
-	ble_uuid.uuid = CO_UUID_HUMIDITY_CHAR;
+
+	BLE_UUID_BLE_ASSIGN(ble_uuid, CO_UUID_HUMIDITY_CHAR);
 
 	memset(&attr_md, 0, sizeof(attr_md));
 
@@ -231,8 +230,7 @@ static uint32_t press_char_add(ble_co_t* co, ble_co_init_t* co_init) {
     char_md.p_cccd_md         = &cccd_md;
     char_md.p_sccd_md         = NULL;
 
-	ble_uuid.type = co->uuid_type;
-	ble_uuid.uuid = CO_UUID_PRESS_CHAR;
+	BLE_UUID_BLE_ASSIGN(ble_uuid, CO_UUID_PRESS_CHAR);
 
 	memset(&attr_md, 0, sizeof(attr_md));
 
@@ -280,8 +278,7 @@ static uint32_t temp_char_add(ble_co_t* co, ble_co_init_t* co_init) {
     char_md.p_cccd_md         = &cccd_md;
     char_md.p_sccd_md         = NULL;
 
-	ble_uuid.type = co->uuid_type;
-	ble_uuid.uuid = CO_UUID_TEMP_CHAR;
+	BLE_UUID_BLE_ASSIGN(ble_uuid, CO_UUID_TEMP_CHAR);
 
 	memset(&attr_md, 0, sizeof(attr_md));
 
@@ -312,14 +309,7 @@ uint32_t ble_co_init(ble_co_t* co, const ble_co_init_t* co_init) {
 
 	co->conn_handle		= BLE_CONN_HANDLE_INVALID;
 
-	ble_uuid128_t base_uuid = {CO_UUID_BASE};
-	err_code = sd_ble_uuid_vs_add(&base_uuid, &co->uuid_type);
-	if (err_code != NRF_SUCCESS) {
-		return err_code;
-	}
-
-	ble_uuid.type = co->uuid_type;
-	ble_uuid.uuid = CO_UUID_SERVICE;
+	BLE_UUID_BLE_ASSIGN(ble_uuid, CO_UUID_SERVICE);
 
 	err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &ble_uuid,
 											&co->service_handle);

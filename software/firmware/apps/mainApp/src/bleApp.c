@@ -248,7 +248,7 @@ static void advertising_init(void)
     uint8_t       flags =  BLE_GAP_ADV_FLAG_BR_EDR_NOT_SUPPORTED;
 
 
-    //ble_uuid_t adv_uuids[] = {{CO_UUID_SERVICE, m_co.uuid_type}}; 
+    ble_uuid_t adv_uuids[] = {{CO_UUID_SERVICE, BLE_UUID_TYPE_BLE}}; 
 
     // Build and set advertising data
     memset(&advdata, 0, sizeof(advdata));
@@ -257,8 +257,8 @@ static void advertising_init(void)
 	advdata.include_appearance		= true;
     advdata.flags.size              = sizeof(flags);
     advdata.flags.p_data            = &flags;
-    //advdata.uuids_complete.uuid_cnt = sizeof(adv_uuids) / sizeof(adv_uuids[0]);
-    //advdata.uuids_complete.p_uuids  = adv_uuids;
+    advdata.uuids_complete.uuid_cnt = sizeof(adv_uuids) / sizeof(adv_uuids[0]);
+    advdata.uuids_complete.p_uuids  = adv_uuids;
 
     err_code = ble_advdata_set(&advdata, NULL);
     APP_ERROR_CHECK(err_code);
