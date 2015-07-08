@@ -1,8 +1,6 @@
-This folder stores the firmware to test and store data recorded by the pressure sensor
-on the Monoxalyze board. This test is intended to periodically record and
-store pressure and temperature data as a test for pressure sensitive wakeup.
-The rest of the guide explains how to build and program the NRF51822 running 
-on Monoxalyze.
+This folder stores the firmware to test and store data recorded by the humidity sensor
+on the Monoxalyze board. This is a good test to verify functionality of the
+humidity sensor.
 
 Setup
 =====
