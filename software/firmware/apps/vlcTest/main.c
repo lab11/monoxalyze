@@ -16,7 +16,7 @@
 #define TIMER_PRESCALER 	0
 #define MAX_TIMERS 			1
 #define TIMER_QUEUE_SIZE 	1
-#define SAMPLE_RATE			APP_TIMER_TICKS(166, TIMER_PRESCALER)
+#define SAMPLE_RATE			APP_TIMER_TICKS(500, TIMER_PRESCALER)
 
 
 static void sample(void* p_context);
@@ -34,15 +34,40 @@ static uint32_t pg_num;
 static uint32_t lastPressure;
 static uint32_t currPressure;
 
-static void sample (void* p_context) {
-	static int i = 0;
-	if(i%2){
-		ledOn(LED_2);
-	} else {
-		ledOff(LED_2);
-	}
+#define BLINK 0x4D
 
-	i++;
+static void sample (void* p_context) {
+	
+	static int i = 0;
+
+	if(i == 0) {
+		ledOff(LED_1);	
+		ledOff(LED_2);	
+		ledOff(LED_3);	
+		i++;
+	} else if(i == 1) {
+		ledOn(LED_1);	
+		ledOff(LED_2);	
+		ledOn(LED_3);	
+		i++;
+	} else if( i == 2) {
+		ledOff(LED_1);	
+		ledOn(LED_2);	
+		ledOn(LED_3);	
+		i++;
+	} else if(i == 3) {
+		ledOn(LED_1);	
+		ledOn(LED_2);	
+		ledOn(LED_3);	
+		i++;
+	} else if(i == 4) {
+		ledOff(LED_1);	
+		ledOff(LED_2);	
+		ledOff(LED_3);	
+		i = 0;
+	}
+	
+
 }
 
 static void timerInit(void) {

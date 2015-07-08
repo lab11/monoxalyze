@@ -30,20 +30,13 @@ static bool done = false;
 static uint32_t* addr;
 static uint32_t pg_size;
 static uint32_t pg_num;
-static uint32_t lastPressure;
 static uint32_t currPressure;
 
 static void sample (void* p_context) {
-	currPressure = getPressure();
-	int32_t pressStore = lastPressure - currPressure;
-	lastPressure = currPressure;
-	uint16_t tempStore = getTemp();
+	uint32_t currPressure = getRawPressure();
 
-	uint32_t toWrite = 0;
 
-	toWrite |= (pressStore << 16);
-	toWrite |= tempStore;
-	writeWord(++addr, toWrite);
+	writeWord(++addr, currPressure);
 
 	numSamples++;
 
@@ -110,14 +103,9 @@ static void clockInit(void) {
 static void storageInit(void) {
 	pg_size = NRF_FICR->CODEPAGESIZE;
 	//pg_num = NRF_FICR->CODESIZE-1;
-	pg_num = 0x2000/pg_size;
+	pg_num = 0x4000/pg_size;
 
 	addr = (uint32_t*)(pg_size * pg_num) -1;
-
-	//write first word to be pressure
-	lastPressure = getPressure();
-	writeWord(++addr, lastPressure);
-
 }
 
 int main(void)
