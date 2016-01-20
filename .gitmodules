@@ -1,3 +1,6 @@
 [submodule "software/firmware/nrf51-pure-gcc-setup"]
 	path = software/firmware/nrf51-pure-gcc-setup
 	url = git@github.com:lab11/nrf51-pure-gcc-setup.git
+[submodule "software/firmware/nrf5x-base"]
+	path = software/firmware/nrf5x-base
+	url = git@github.com:lab11/nrf5x-base.git
