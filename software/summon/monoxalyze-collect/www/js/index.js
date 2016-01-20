@@ -47,7 +47,7 @@ var app = {
     // BLE Device Connected Callback
     onConnect: function(device) {
         app.log("Connected to " + deviceName + " (" + deviceId + ")!");
-		app.log(JSON.stringify(device));
+		//app.log(JSON.stringify(device));
 		//change the dome name to say connected and ready to collect data
 		document.getElementById("collect_button").innerHTML = "Start Collecting";
 		document.getElementById("collect_button").disabled = false;
