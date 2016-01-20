@@ -15,11 +15,18 @@
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
 		<h1>Monoxalyze Data Collection</h1>
+		<br>
+		<h2>Instructions:</h2>
+		<p>Please take a reading with a medical carbon monoxide breathalyzer,
+			and input the reading. Then press the "Collect" button, have
+			the subject exhale through Monoxalyze, press the "Stop and Report"
+			button, and wait until the app is done reporting the data.
+			</p> <br><br>
 		<form>
 			Medical Device Reading (ppm): <br>
 			<input type="number" > <br>
 		</form>
-		<br>
-		<button onclick="collect_button()" disabled>Connecting...</button>
+		<br><br>
+		<button id="collect_button" onclick="app.collect_button()" disabled>Connecting...</button>
     </body>
 </html>
