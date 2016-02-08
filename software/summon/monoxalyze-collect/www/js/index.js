@@ -56,6 +56,9 @@ var app = {
 		networkState = navigator.connection.type;
 		if(networkState == Connection.NONE) {
 			document.getElementById("wifiwarn").innerHTML = "Please connect to a WIFI network!";
+			app.log("WARNING: Not connected to the network");
+		} else {
+			app.log("connected to the network");
 		}
 
 		document.addEventListener("online",app.wentOnline, false);
@@ -77,12 +80,13 @@ var app = {
 
     // App Paused Event Handler
     onPause: function() {    // if user leaves app, stop BLE
-        ble.disconnect(deviceId);
+        //ble.disconnect(deviceId);
         ble.stopScan();
     },
 
     // Bluetooth Enabled Callback
     onEnable: function() {
+		app.log("about to start scanning for bluetooth device");
         app.onPause();         // halt any previously running BLE processes
         ble.startScan([], app.onDiscover, function(){app.log("scan error")});     
         app.log("Searching for " + deviceName + " (" + deviceId + ").");
