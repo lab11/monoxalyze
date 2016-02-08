@@ -304,8 +304,8 @@ var app = {
 	},
     // Function to Log Text to Screen
     log: function(string) {
-        //document.querySelector("#console").innerHTML += (new Date()).toLocaleTimeString() + " : " + string + "<br />"; 
-		console.log(string);
+        document.querySelector("#console").innerHTML += (new Date()).toLocaleTimeString() + " : " + string + "<br />";
+        document.querySelector("#console").scrollTop = document.querySelector("#console").scrollHeight;
     }
 };
 
