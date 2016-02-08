@@ -51,7 +51,7 @@ var app = {
             deviceName = window.gateway.getDeviceName();//e name from Summon
         }
 
-		document.getElementByID("title").innerHTML = String(deviceId);
+		document.getElementById("title").innerHTML = String(deviceId);
 
 		networkState = navigator.connection.type;
 		if(networkState == Connection.NONE) {
