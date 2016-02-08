@@ -28,9 +28,12 @@ var app = {
 	
     // Application Constructor
     initialize: function() {
+		app.log("monoxalyze Init");
         document.addEventListener("deviceready", app.onAppReady, false);
         document.addEventListener("resume", app.onResume, false);
         document.addEventListener("pause", app.onPause, false);
+
+		app.onAppReady();
     },
 	onResume: function() {
 
@@ -47,6 +50,8 @@ var app = {
             deviceId = window.gateway.getDeviceId();// get device ID from Summon
             deviceName = window.gateway.getDeviceName();//e name from Summon
         }
+
+		document.getElementByID("title").innerHTML = String(deviceId);
 
 		networkState = navigator.connection.type;
 		if(networkState == Connection.NONE) {
