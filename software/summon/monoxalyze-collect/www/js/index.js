@@ -1,6 +1,6 @@
 /* JavaScript for Template Summon UI */
 
-var deviceId = "C0:98:E5:00:38:6D"; 
+var deviceId = "C0:98:E5:00:32:3F"; 
 //var deviceId = "C0:98:E5:00:6E:2D"; 
 var deviceName = "Monoxalyze";  
 var serviceId = "1800"; 
@@ -9,7 +9,13 @@ var stopCollectId = "11AC";
 var startReadId = "11AD"; 
 var doneReadId = "11AE"; 
 var dataId = "11AF"; 
-var dataFile;
+var lenReadId = "11A9"; 
+var dataFilea
+var writeString = ""
+var readLen = 0;
+var notifyCount = 0;
+
+var postURL = "http://post.gatd.io/ef604d71-e621-4699-900e-bf4caf0ad9ee"
 
 var stateEnum = {
 	WAITING: 0,
@@ -35,15 +41,30 @@ var app = {
 
 		app.log("app started");
 		state = stateEnum.WAITING;
-		dataFile = new ArrayBuffer(20);
+		dataFile = new ArrayBuffer(0);
 
-        if (window.gateway) { // if UI opened through Summon,
+        if(typeof window.gateway != "undefined") { // if UI opened through Summon,
             deviceId = window.gateway.getDeviceId();// get device ID from Summon
             deviceName = window.gateway.getDeviceName();//e name from Summon
         }
 
+		networkState = navigator.connection.type;
+		if(networkState == Connection.NONE) {
+			document.getElementById("wifiwarn").innerHTML = "Please connect to a WIFI network!";
+		}
+
+		document.addEventListener("online",app.wentOnline, false);
+		document.addEventListener("offline",app.wentOffline, false);
+		
+
         ble.isEnabled(app.onEnable,app.notEnabled);  // if BLE enabled, goto: onEnable
     },
+	wentOnline: function() {
+		document.getElementById("wifiwarn").innerHTML = "";
+	},
+	wentOffLine: function() {
+		document.getElementById("wifiwarn").innerHTML = "Please connect to a WIFI network!";
+	},
 	notEnabled: function() {
 		app.log("BLE is not Enabled!!");
         ble.enable(app.onEnable,app.notEnabled);  
@@ -68,9 +89,15 @@ var app = {
 
 
 			//connect
-            ble.connect(deviceId, app.onConnect, function(){app.log("connect error")});
+            ble.connect(deviceId, app.onConnect,app.onDisconnect );
         }
     },
+	onDisconnect: function(device) {
+		console.log("just disconnect");
+		document.getElementById("collect_button").innerHTML = "Disconnected, trying to connect...";
+		document.getElementById("collect_button").disabled = true;
+        ble.startScan([], app.onDiscover, function(){app.log("scan error")});     
+	},
     onConnect: function(device) {
 
 		//do some logging 
@@ -83,7 +110,8 @@ var app = {
 		stopCollectId = device.characteristics[4].characteristic;
 		startReadId = device.characteristics[5].characteristic;
 		doneReadId = device.characteristics[6].characteristic;
-		dataId = device.characteristics[7].characteristic;
+		lenReadId = device.characteristics[7].characteristic;
+		dataId = device.characteristics[8].characteristic;
 
 		
 		app.log(JSON.stringify(startCollectId));
@@ -109,25 +137,106 @@ var app = {
 		document.getElementById("collect_button").disabled = false;
     },
     onRead: function(data) {
-        app.log("Characteristic Read: " + app.bytesToString(data));      
+        //app.log("Characteristic Read: " + app.bytesToString(data));      
     },
     // BLE Characteristic Write Callback
     onWrite : function() {
-        app.log("Characeristic Written: " + writeValue);      
+        //app.log("Characeristic Written: " + writeValue);      
     },
 	onDataNotify: function(buffer) {
+		percentComplete = (notifyCount*5)/readLen;
+		percentComplete *= 100;
+		document.getElementById("collect_button").innerHTML = "Recording... " + percentComplete.toFixed(0) + "%";
 		app.log("got data notifation");
 		var tmp = new Uint8Array(dataFile.byteLength + buffer.byteLength);
 		app.log(dataFile.byteLength);
 		tmp.set(new Uint8Array(dataFile), 0);
 		tmp.set(new Uint8Array(buffer), dataFile.byteLength);
 		dataFile = tmp.buffer;
+		notifyCount += 1;
 	},
 	onDoneNotify: function(buffer) {
 		//do something to send to the cloud and save the file
 		app.log("got done notifation");	
 		intArray = new Uint32Array(dataFile, 0, dataFile.byteLength/4);
 		app.log(intArray.join());
+		
+		//for a writer string
+		writeString += "Pressure,Temperature,Humidity,Gas\n";
+		for(i = 0; i < intArray.length; i++) {
+			writeString += intArray[i].toString();
+			if((i+1) % 4 == 0) {
+				writeString += "\n";
+			} else {
+				writeString += ",";
+			}
+		}
+
+		var temp = new Date();
+		
+
+		window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory,function(directoryEntry) {
+			directoryEntry.getDirectory("monox",{create:true, exclusive:false},
+			function(directoryEntry) {
+				directoryEntry.getFile((temp.getTime()+".csv"), {create:true, exclusive:false}, 
+				function(fileEntry) {
+					console.log(fileEntry.toURL());
+					fileEntry.createWriter(
+						function(writer) {
+							writer.onwriteend = app.doneWritingFile;
+							writer.write(writeString);
+						}, function() {
+							console.log("something failed");
+						});
+				}, function() {
+					console.log("something failed");
+				});
+			}, function() {
+				console.log("directory creation failed");
+			});
+		});
+
+	},
+	donewithHTTP: function() {
+		document.getElementById("collect_button").innerHTML = "Completed! collect again?";
+		document.getElementById("medRead").value = "";
+		document.getElementById("collect_button").disabled = false;
+		state = stateEnum.WAITING;
+		writeString = "";
+		notifyCount = 0;
+		dataFile = new ArrayBuffer(0);
+	},
+	dotheHTTP: function() {
+		//check the network state
+		networkState = navigator.connection.type;
+		if(networkState == Connection.NONE) {
+			app.log("network not enabled...skipping");
+			app.donewithHTTP();
+			return;
+		} 
+
+		medical = document.getElementById("medRead").value;
+		cordovaHTTP.setHeader("Content-Type","text/plain", function() {
+				console.log("successfully set content type");
+			}, function() {
+				console.log("error in set content type");
+			});
+		var string64 = btoa(writeString);
+		cordovaHTTP.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}}, {}, function(response) {
+				console.log(response.status);
+				app.donewithHTTP();
+			}, function(response) {
+				if(response) {
+					console.log(response.status);
+				} else {
+					console.log("post failed");
+				}
+			});
+	},
+	doneWritingFile: function(evt) {
+		console.log("Done writing the file, we should try gatd now");
+		document.getElementById("collect_button").innerHTML = "Sending Data to the Cloud";
+		app.dotheHTTP();
 	},
     // BLE Device Connected Callback
     onError: function() {              
@@ -153,7 +262,14 @@ var app = {
 		state = stateEnum.COLLECTING;
 		document.getElementById("collect_button").innerHTML = "Stop Collecting and Record Data";
 	},
-	doneCollecting: function() {
+	getLen: function() {
+		ble.read(deviceId,serviceId,lenReadId,app.doneCollecting, function() {
+			app.log("read error");
+		});
+	},
+	doneCollecting: function(data) {
+		var len = new Uint32Array(data);
+		readLen = len[0];
 		app.log("successfully finished collecting - about to read back");
 		var data = new Uint8Array(1);
 		data[0] = 1;
@@ -173,11 +289,17 @@ var app = {
 			var data = new Uint8Array(1);
 			data[0] = 1;
 			app.log("now writing");
-			ble.writeWithoutResponse(deviceId,serviceId,startCollectId,data.buffer,app.nowCollecting,app.onError2);
+			form = document.getElementById("medRead").value;
+			if(form == "") {
+				document.getElementById("formwarn").innerHTML = "Please input a reading before collecting!";
+			} else {
+				document.getElementById("formwarn").innerHTML = " ";
+				ble.writeWithoutResponse(deviceId,serviceId,startCollectId,data.buffer,app.nowCollecting,app.onError2);
+			}
 		} else if (state == stateEnum.COLLECTING) {
 			var data = new Uint8Array(1);
 			data[0] = 1;
-			ble.write(deviceId,serviceId,stopCollectId,data.buffer,app.doneCollecting,function() {app.log("error in stopping collection")});
+			ble.write(deviceId,serviceId,stopCollectId,data.buffer,app.getLen,function() {app.log("error in stopping collection")});
 		}
 	},
     // Function to Log Text to Screen

@@ -25,9 +25,12 @@
 			</p> <br><br>
 		<form>
 			Medical Device Reading (ppm): <br>
-			<input type="number" > <br>
+			<input id="medRead" type="number" > <br>
 		</form>
+		<p id="formwarn"> </p>
 		<br><br>
 		<button id="collect_button" onclick="app.collect_button()" disabled>Connecting...</button>
+		<br>
+		<p id="wifiwarn"></p>
     </body>
 </html>

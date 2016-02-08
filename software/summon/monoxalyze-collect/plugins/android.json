@@ -7,11 +7,20 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-ble-central": {
+            "PACKAGE_NAME": "edue.umich.eecs.lab11.monoxalyze"
+        },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "edue.umich.eecs.lab11.monoxalyze"
         },
-        "cordova-plugin-ble-central": {
+        "cordova-plugin-file": {
             "PACKAGE_NAME": "edue.umich.eecs.lab11.monoxalyze"
+        },
+        "com.synconset.cordovaHTTP": {
+            "PACKAGE_NAME": "edu.umich.eecs.lab11.monoxalyze"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "edu.umich.eecs.lab11.monoxalyze"
         }
     },
     "dependent_plugins": {}
