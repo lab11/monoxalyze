@@ -40,11 +40,13 @@
 			the subject exhale through Monoxalyze, press the "Stop and Report"
 			button, and wait until the app is done reporting the data.</td>
             </tr>
+			<tr>
 			 	<td align=left class="charTitleCell">Medical Device Reading (ppm):</td> 
 				<td><input id="medRead" type="number"> </td>
 				<td align=right class="charValueCell" if="formwarn"></td>
+			</tr>
             <tr>
-				<td><button id="collect_button" onclick="app.collect_button()" disabled>Connecting...</button></td>
+				<td align=left><button id="collect_button" onclick="app.collect_button()" disabled>Connecting...</button></td>
 				<td align=right class="charValueCell" if="wifiwarn"></td>
             </tr>
         </table>
