@@ -33,7 +33,9 @@ var app = {
         document.addEventListener("resume", app.onResume, false);
         document.addEventListener("pause", app.onPause, false);
 
-		app.onAppReady();
+        if(typeof window.gateway != "undefined") { 
+			app.onAppReady();
+		}
     },
 	onResume: function() {
 
