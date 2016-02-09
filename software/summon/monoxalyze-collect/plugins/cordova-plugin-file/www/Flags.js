@@ -1,3 +1,4 @@
+cordova.define("cordova-plugin-file.Flags", function(require, exports, module) {
 /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -34,3 +35,5 @@ function Flags(create, exclusive) {
 }
 
 module.exports = Flags;
+
+});

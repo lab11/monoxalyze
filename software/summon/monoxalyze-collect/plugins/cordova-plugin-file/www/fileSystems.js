@@ -1,3 +1,4 @@
+cordova.define("cordova-plugin-file.fileSystems", function(require, exports, module) {
 /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,3 +24,5 @@
 module.exports.getFs = function(name, callback) {
     callback(null);
 };
+
+});

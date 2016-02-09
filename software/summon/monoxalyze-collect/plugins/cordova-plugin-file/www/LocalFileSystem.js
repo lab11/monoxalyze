@@ -1,3 +1,4 @@
+cordova.define("cordova-plugin-file.LocalFileSystem", function(require, exports, module) {
 /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,3 +22,5 @@
 
 exports.TEMPORARY = 0;
 exports.PERSISTENT = 1;
+
+});

@@ -1,3 +1,4 @@
+cordova.define("cordova-plugin-file.fileSystemPaths", function(require, exports, module) {
 /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -61,3 +62,5 @@ channel.onCordovaReady.subscribe(function() {
     exec(after, null, 'File', 'requestAllPaths', []);
 });
 
+
+});

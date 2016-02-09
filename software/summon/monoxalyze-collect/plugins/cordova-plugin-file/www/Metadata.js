@@ -1,3 +1,4 @@
+cordova.define("cordova-plugin-file.Metadata", function(require, exports, module) {
 /*
  *
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -38,3 +39,5 @@ var Metadata = function(metadata) {
 };
 
 module.exports = Metadata;
+
+});
