@@ -219,12 +219,12 @@ var app = {
 	},
 	dotheHTTP: function() {
 		//check the network state
-		networkState = navigator.connection.type;
+		/*networkState = navigator.connection.type;
 		if(networkState == Connection.NONE) {
 			app.log("network not enabled...skipping");
 			app.donewithHTTP();
 			return;
-		} 
+		} */
 
 		medical = document.getElementById("medRead").value;
 		cordovaHTTP.setHeader("Content-Type","text/plain", function() {
