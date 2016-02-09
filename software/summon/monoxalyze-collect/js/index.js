@@ -55,13 +55,13 @@ var app = {
 
 		document.getElementById("title").innerHTML = String(deviceId);
 
-		/*networkState = navigator.connection.type;
+		networkState = navigator.connection.type;
 		if(networkState == Connection.NONE) {
 			document.getElementById("wifiwarn").innerHTML = "Please connect to a WIFI network!";
 			app.log("WARNING: Not connected to the network");
 		} else {
 			app.log("connected to the network");
-		}*/
+		}
 
 		document.addEventListener("online",app.wentOnline, false);
 		document.addEventListener("offline",app.wentOffline, false);
@@ -299,12 +299,14 @@ var app = {
 		if(state == stateEnum.WAITING) {
 			var data = new Uint8Array(1);
 			data[0] = 1;
-			app.log("now writing");
+			app.log("checking form valid");
 			form = document.getElementById("medRead").value;
 			if(form == "") {
 				document.getElementById("formwarn").innerHTML = "Please input a reading before collecting!";
+				app.log("need to enter a form value");
 			} else {
-				document.getElementById("formwarn").innerHTML = " ";
+				document.getElementById("formwarn").innerHTML = "";
+				app.log("form value entered - starting writing process");
 				ble.writeWithoutResponse(deviceId,serviceId,startCollectId,data.buffer,app.nowCollecting,app.onError2);
 			}
 		} else if (state == stateEnum.COLLECTING) {

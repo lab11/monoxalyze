@@ -43,13 +43,13 @@
 			<tr><td style="height:15px;"></td></tr>
 			<tr>
 			 	<td align=left class="charTitleCell">Medical Device Reading (ppm):</td> 
-				<td><input id="medRead" type="number"> </td>
-				<td align=right class="charValueCell" if="formwarn"></td>
+				<td><input id="medRead" type="number"></td>
+				<td align=right class="charValueCell" id="formwarn"></td>
 			</tr>
 			<tr><td style="height:15px;"></td></tr>
             <tr>
 				<td align=left><button id="collect_button" onclick="app.collect_button()" disabled>Connecting...</button></td>
-				<td align=right class="charValueCell" if="wifiwarn"></td>
+				<td align=right class="charValueCell" id="wifiwarn"></td>
             </tr>
         </table>
         </br>
