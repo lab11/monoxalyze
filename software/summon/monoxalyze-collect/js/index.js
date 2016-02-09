@@ -171,7 +171,7 @@ var app = {
 		//do something to send to the cloud and save the file
 		app.log("got done notifation");	
 		intArray = new Uint32Array(dataFile, 0, dataFile.byteLength/4);
-		app.log(intArray.join());
+		//app.log(intArray.join());
 		
 		//for a writer string
 		writeString += "Pressure,Temperature,Humidity,Gas\n";
@@ -186,6 +186,7 @@ var app = {
 
 		var temp = new Date();
 		
+		app.log("trying to write to file");	
 
 		window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory,function(directoryEntry) {
 			directoryEntry.getDirectory("monox",{create:true, exclusive:false},
@@ -198,15 +199,17 @@ var app = {
 							writer.onwriteend = app.doneWritingFile;
 							writer.write(writeString);
 						}, function() {
-							console.log("something failed");
+							app.log("something failed writing to file");
 						});
 				}, function() {
-					console.log("something failed");
+					app.log("something failed opening file writing");
 				});
 			}, function() {
-				console.log("directory creation failed");
+				app.log("directory creation failed");
 			});
 		});
+
+		app.log("writing to the file done");
 
 	},
 	donewithHTTP: function() {
