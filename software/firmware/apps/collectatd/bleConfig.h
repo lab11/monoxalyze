@@ -6,6 +6,7 @@
 #define MONOXALYZE_CHAR_STOP_COLLECT_SHORT_UUID		0x11AC
 #define MONOXALYZE_CHAR_START_READ_SHORT_UUID		0x11AD
 #define MONOXALYZE_CHAR_DONE_READ_SHORT_UUID		0x11AE
+#define MONOXALYZE_CHAR_LEN_SHORT_UUID		0x11A9
 #define MONOXALYZE_CHAR_DATA_SHORT_UUID				0x11AF
 
 #define DEVICE_NAME "Monoxalyze"
@@ -15,6 +16,7 @@ typedef struct ble_monoxalyze_s {
 	uint8_t		stop_collect_val;
 	uint8_t		start_read_val;
 	uint8_t		done_read_val;
+	uint32_t	len_val;
 	uint8_t 	data_ptr[20];
 	//uint8_t* 	data_ptr;
 } ble_monoxalyze_t;

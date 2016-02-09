@@ -53,6 +53,7 @@ static ble_monoxalyze_t monoxalyze = {
 	.stop_collect_val = 0,
 	.start_read_val = 0,
 	.done_read_val = 0,
+	.len_val = 0,
 	.data_ptr = { 0 }
 };
 
@@ -68,6 +69,8 @@ simple_ble_char_t start_read_char =
 						{.uuid16 = MONOXALYZE_CHAR_START_READ_SHORT_UUID};
 simple_ble_char_t done_read_char =
 						{.uuid16 = MONOXALYZE_CHAR_DONE_READ_SHORT_UUID};
+simple_ble_char_t len_char =
+						{.uuid16 = MONOXALYZE_CHAR_LEN_SHORT_UUID};
 simple_ble_char_t data_char =
 						{.uuid16 = MONOXALYZE_CHAR_DATA_SHORT_UUID};
 
@@ -98,6 +101,11 @@ void services_init (void) {
 								&monoxalyze_service,
 								&done_read_char);
 
+	simple_ble_add_characteristic(1,0,0,0,4, //read,len=1
+								(uint8_t*)&monoxalyze.len_val,
+								&monoxalyze_service,
+								&len_char);
+
 	simple_ble_add_characteristic(1,1,1,1,20, //read,write,notify,vlen,len=1
 								monoxalyze.data_ptr,
 								&monoxalyze_service,
@@ -109,33 +117,34 @@ static void collect_handler (void * p_context) {
 	if(state == COLLECTING && collect_count < MAX_COLLECT) {
 		//log_rtt_printf(0, "Handler called and collecting - taking samples\n");
 
-		uint32_t value = getRawPressure();
+		static uint32_t value[4]; 
+		value[0] = getRawPressure();
 		//log_rtt_printf(0, "got pressure data\n");
-		writeWord((uint32_t*)(addr+collect_count),value);
-		//log_rtt_printf(0, "wrote pressure data\n");
-		collect_count++;
+		//writeWord((uint32_t*)(addr+collect_count),value);
+		log_rtt_printf(0, "wrote pressure data\n");
 
-		value = si7021GetHumidity();
-		//log_rtt_printf(0, "got humidity data\n");
-		writeWord((uint32_t*)(addr+collect_count),value);
-		//log_rtt_printf(0, "wrote humidity data\n");
-		collect_count++;
-
-		value = si7021GetTemperature();
+		value[1] = si7021GetTemperature();
 		//log_rtt_printf(0, "got temp data\n");
-		writeWord((uint32_t*)(addr+collect_count),value);
-		//log_rtt_printf(0, "wrote temp data\n");
-		collect_count++;
+		//writeWord((uint32_t*)(addr+collect_count),value);
+		log_rtt_printf(0, "wrote temp data\n");
 
-		value = getGasSample();
+		value[2] = si7021GetHumidity();
+		//log_rtt_printf(0, "got humidity data\n");
+		//writeWord((uint32_t*)(addr+collect_count),value);
+		log_rtt_printf(0, "wrote humidity data\n");
+		
+		value[3] = getGasSample();
 		//log_rtt_printf(0, "got gas data\n");
-		writeWord((uint32_t*)(addr+collect_count),value);
-		//log_rtt_printf(0, "wrote gas data\n");
-		collect_count++;
+		//writeWord((uint32_t*)(addr+collect_count),value);
+		while(sd_flash_write((uint32_t* const)(addr+collect_count),(uint32_t const * const)value,4)
+					!= NRF_SUCCESS);
+		log_rtt_printf(0, "wrote gas data\n");
+		collect_count += 4;
+		monoxalyze.len_val = collect_count;
 
 	} else if (state == WRITING_BACK) {
 		//we are done with this read
-		if(notify_count*20 > collect_count*4 && sent == 1) {
+		if(notify_count*20 >= collect_count*4 && sent == 1) {
 			notify_count = 0;
 			collect_count = 0;
 			monoxalyze.done_read_val = 1;
@@ -143,16 +152,22 @@ static void collect_handler (void * p_context) {
 			simple_ble_notify_char(&done_read_char);
 			state = DONE_COLLECTING;
 			sent = 0;
+			monoxalyze.len_val = 0;
 		} else if(sent){
 			log_rtt_printf(0, "Notifying data\n");
 			//set the data in the characteristic
 			memcpy(monoxalyze.data_ptr, (uint8_t*)(((uint8_t*)addr)+(notify_count*20)),20);
+			log_rtt_printf(0, "This is my data %d\n", *(uint32_t*)monoxalyze.data_ptr);
+			log_rtt_printf(0, "This is my data %d\n", *(uint32_t*)(monoxalyze.data_ptr+4));
+			log_rtt_printf(0, "This is my data %d\n", *(uint32_t*)(monoxalyze.data_ptr+8));
+			log_rtt_printf(0, "This is my data %d\n", *(uint32_t*)(monoxalyze.data_ptr+12));
+			log_rtt_printf(0, "This is my data %d\n", *(uint32_t*)(monoxalyze.data_ptr+16));
 			//monoxalyze.data_ptr = (uint8_t*)START_ADDR+(notify_count*20); // get byte addr
 			simple_ble_notify_char(&data_char);
 			sent = 0;
 			notify_count++;
 		} else {
-			log_rtt_printf(0, "not done sending previous packet\n");
+			//log_rtt_printf(0, "not done sending previous packet\n");
 		}
 
 	}
@@ -220,7 +235,7 @@ int main(void) {
 	simple_timer_start(50, collect_handler);
 
 	log_rtt_printf(0, "Starting Eddystone Advertising\n");
-	eddystone_adv("goo.gl/XiusZA",NULL);
+	eddystone_adv("goo.gl/nCQV8C",NULL);
 	//simple_adv_only_name();
 
 	while(1) {
