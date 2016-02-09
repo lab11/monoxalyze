@@ -55,13 +55,13 @@ var app = {
 
 		document.getElementById("title").innerHTML = String(deviceId);
 
-		networkState = navigator.connection.type;
+		/*networkState = navigator.connection.type;
 		if(networkState == Connection.NONE) {
 			document.getElementById("wifiwarn").innerHTML = "Please connect to a WIFI network!";
 			app.log("WARNING: Not connected to the network");
 		} else {
 			app.log("connected to the network");
-		}
+		}*/
 
 		document.addEventListener("online",app.wentOnline, false);
 		document.addEventListener("offline",app.wentOffline, false);
