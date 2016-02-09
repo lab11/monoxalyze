@@ -1,4 +1,4 @@
-cordova.define("cordova-plugin-ble-central.ble", function(require, exports, module) { // (c) 2014 Don Coleman
+// (c) 2014 Don Coleman
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -141,5 +141,3 @@ module.exports = {
     }
 
 };
-
-});

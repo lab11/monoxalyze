@@ -22,7 +22,8 @@
 /*global require*/
 
 //Only Chrome uses this file.
-if (!require('./isChrome')()) {
+var isChrome = window.webkitRequestFileSystem && window.webkitResolveLocalFileSystemURL;
+if (!isChrome) {
     return;
 }
 

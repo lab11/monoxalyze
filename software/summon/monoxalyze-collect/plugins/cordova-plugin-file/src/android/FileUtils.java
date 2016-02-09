@@ -18,12 +18,9 @@
  */
 package org.apache.cordova.file;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
@@ -44,7 +41,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,27 +65,9 @@ public class FileUtils extends CordovaPlugin {
     public static int TYPE_MISMATCH_ERR = 11;
     public static int PATH_EXISTS_ERR = 12;
 
-    /*
-     * Permission callback codes
-     */
-
-    public static final int READ_PERM = 0;
-    public static final int WRITE_PERM = 1;
-
     public static int UNKNOWN_ERR = 1000;
-
+    
     private boolean configured = false;
-    private String lastRawArgs;
-
-    private CallbackContext callback;
-
-    /*
-     * We need both read and write when accessing the storage, I think.
-     */
-
-    private String [] permissions = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
     // This field exists only to support getEntry, below, which has been deprecated
     private static FileUtils filePlugin;
@@ -97,7 +75,7 @@ public class FileUtils extends CordovaPlugin {
     private interface FileOp {
         void run(JSONArray args) throws Exception;
     }
-
+    
     private ArrayList<Filesystem> filesystems;
 
     public void registerFilesystem(Filesystem fs) {
@@ -105,7 +83,7 @@ public class FileUtils extends CordovaPlugin {
     		this.filesystems.add(fs);
     	}
     }
-
+    
     private Filesystem filesystemForName(String name) {
     	for (Filesystem fs:filesystems) {
     		if (fs != null && fs.name != null && fs.name.equals(name)) {
@@ -141,7 +119,7 @@ public class FileUtils extends CordovaPlugin {
             }
         }
     }
-
+    
     protected HashMap<String, String> getAvailableFileSystems(Activity activity) {
         Context context = activity.getApplicationContext();
         HashMap<String, String> availableFileSystems = new HashMap<String,String>();
@@ -226,7 +204,7 @@ public class FileUtils extends CordovaPlugin {
     		activity.finish();
     	}
     }
-
+    
     public static FileUtils getFilePlugin() {
 		return filePlugin;
 	}
@@ -235,7 +213,7 @@ public class FileUtils extends CordovaPlugin {
     	if (localURL == null) return null;
     	return filesystemForName(localURL.fsName);
     }
-
+    
     @Override
     public Uri remapUri(Uri uri) {
         // Remap only cdvfile: URLs (not content:).
@@ -259,8 +237,6 @@ public class FileUtils extends CordovaPlugin {
     }
 
     public boolean execute(String action, final String rawArgs, final CallbackContext callbackContext) {
-        this.callback = callbackContext;
-        lastRawArgs = rawArgs;
         if (!configured) {
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "File plugin is not configured. Please see the README.md file for details on how to update config.xml"));
             return true;
@@ -276,10 +252,7 @@ public class FileUtils extends CordovaPlugin {
         else if (action.equals("getFreeDiskSpace")) {
             threadhelper( new FileOp( ){
                 public void run(JSONArray args) {
-                    // The getFreeDiskSpace plugin API is not documented, but some apps call it anyway via exec().
-                    // For compatibility it always returns free space in the primary external storage, and
-                    // does NOT fallback to internal store if external storage is unavailable.
-                    long l = DirectoryManager.getFreeExternalStorageSpace();
+                    long l = DirectoryManager.getFreeDiskSpace(false);
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, l));
                 }
             }, rawArgs, callbackContext);
@@ -350,18 +323,8 @@ public class FileUtils extends CordovaPlugin {
                     String data=args.getString(1);
                     int offset=args.getInt(2);
                     Boolean isBinary=args.getBoolean(3);
-                    /*
-                     * If we don't have the package name in the path, we're reading and writing to places we need permission for
-                     */
-                    if(fname.contains(cordova.getActivity().getPackageName()) ||
-                            hasReadPermission()) {
-                        long fileSize = write(fname, data, offset, isBinary);
-                        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, fileSize));
-                    }
-                    else {
-                        getWritePermission();
-                    }
-
+                    long fileSize = write(fname, data, offset, isBinary);
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, fileSize));
                 }
             }, rawArgs, callbackContext);
         }
@@ -396,10 +359,15 @@ public class FileUtils extends CordovaPlugin {
             );
         } else if (action.equals("requestFileSystem")) {
             threadhelper( new FileOp( ){
-                public void run(JSONArray args) throws JSONException {
-                    int fstype = args.getInt(0);
-                    long requiredSize = args.optLong(1);
-                    requestFileSystem(fstype, requiredSize, callbackContext);
+                public void run(JSONArray args) throws IOException, JSONException {
+                    int fstype=args.getInt(0);
+                    long size = args.optLong(1);
+                    if (size != 0 && size > (DirectoryManager.getFreeDiskSpace(true) * 1024)) {
+                        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, FileUtils.QUOTA_EXCEEDED_ERR));
+                    } else {
+                        JSONObject obj = requestFileSystem(fstype);
+                        callbackContext.success(obj);
+                    }
                 }
             }, rawArgs, callbackContext);
         }
@@ -444,18 +412,9 @@ public class FileUtils extends CordovaPlugin {
             threadhelper( new FileOp( ){
                 public void run(JSONArray args) throws FileExistsException, IOException, TypeMismatchException, EncodingException, JSONException {
                     String dirname=args.getString(0);
-                    /*
-                     * If we don't have the package name in the path, we're reading and writing to places we need permission for
-                     */
-                    if(dirname.contains(cordova.getActivity().getPackageName()) ||
-                            hasReadPermission()) {
-                        String path = args.getString(1);
-                        JSONObject obj = getFile(dirname, path, args.optJSONObject(2), false);
-                        callbackContext.success(obj);
-                    }
-                    else {
-                        getReadPermission();
-                    }
+                    String path=args.getString(1);
+                    JSONObject obj = getFile(dirname, path, args.optJSONObject(2), false);
+                    callbackContext.success(obj);
                 }
             }, rawArgs, callbackContext);
         }
@@ -532,24 +491,6 @@ public class FileUtils extends CordovaPlugin {
         }
         return true;
     }
-
-    private void getReadPermission() {
-        PermissionHelper.requestPermission(this, READ_PERM, Manifest.permission.READ_EXTERNAL_STORAGE);
-    }
-
-    private void getWritePermission() {
-        PermissionHelper.requestPermission(this, WRITE_PERM, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    }
-
-
-    private boolean hasReadPermission() {
-        return PermissionHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-    }
-
-    private boolean hasWritePermission() {
-        return PermissionHelper.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    }
-
 
     public LocalFilesystemURL resolveNativeUri(Uri nativeUri) {
         LocalFilesystemURL localURL = null;
@@ -682,15 +623,15 @@ public class FileUtils extends CordovaPlugin {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
         throw new FileNotFoundException();
-    }
-
+    }   
+    
     /**
      * Read the list of files from this directory.
      *
      * @return a JSONArray containing JSONObjects that represent Entry objects.
      * @throws FileNotFoundException if the directory is not found.
      * @throws JSONException
-     * @throws MalformedURLException
+     * @throws MalformedURLException 
      */
     private JSONArray readEntries(String baseURLstr) throws FileNotFoundException, JSONException, MalformedURLException {
         try {
@@ -700,7 +641,7 @@ public class FileUtils extends CordovaPlugin {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
         	return fs.readEntriesAtLocalURL(inputURL);
-
+        
         } catch (IllegalArgumentException e) {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
@@ -747,8 +688,8 @@ public class FileUtils extends CordovaPlugin {
      *
      * @return a boolean representing success of failure
      * @throws FileExistsException
-     * @throws NoModificationAllowedException
-     * @throws MalformedURLException
+     * @throws NoModificationAllowedException 
+     * @throws MalformedURLException 
      */
     private boolean removeRecursively(String baseURLstr) throws FileExistsException, NoModificationAllowedException, MalformedURLException {
         try {
@@ -763,7 +704,7 @@ public class FileUtils extends CordovaPlugin {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
         	return fs.recursiveRemoveFileAtLocalURL(inputURL);
-
+        
         } catch (IllegalArgumentException e) {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
@@ -777,7 +718,7 @@ public class FileUtils extends CordovaPlugin {
      * @return a boolean representing success of failure
      * @throws NoModificationAllowedException
      * @throws InvalidModificationException
-     * @throws MalformedURLException
+     * @throws MalformedURLException 
      */
     private boolean remove(String baseURLstr) throws NoModificationAllowedException, InvalidModificationException, MalformedURLException {
         try {
@@ -793,7 +734,7 @@ public class FileUtils extends CordovaPlugin {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
         	return fs.removeFileAtLocalURL(inputURL);
-
+        
         } catch (IllegalArgumentException e) {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
@@ -821,7 +762,7 @@ public class FileUtils extends CordovaPlugin {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
         	return fs.getFileForLocalURL(inputURL, path, options, directory);
-
+        
         } catch (IllegalArgumentException e) {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
@@ -840,7 +781,7 @@ public class FileUtils extends CordovaPlugin {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
         	return fs.getParentForLocalURL(inputURL);
-
+        
         } catch (IllegalArgumentException e) {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
@@ -859,7 +800,7 @@ public class FileUtils extends CordovaPlugin {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
         	return fs.getFileMetadataForLocalURL(inputURL);
-
+        
         } catch (IllegalArgumentException e) {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
@@ -869,36 +810,26 @@ public class FileUtils extends CordovaPlugin {
      * Requests a filesystem in which to store application data.
      *
      * @param type of file system requested
-     * @param requiredSize required free space in the file system in bytes
-     * @param callbackContext context for returning the result or error
+     * @return a JSONObject representing the file system
+     * @throws IOException
      * @throws JSONException
      */
-    private void requestFileSystem(int type, long requiredSize, final CallbackContext callbackContext) throws JSONException {
+    private JSONObject requestFileSystem(int type) throws IOException, JSONException {
+        JSONObject fs = new JSONObject();
         Filesystem rootFs = null;
         try {
-            rootFs = this.filesystems.get(type);
+        	rootFs = this.filesystems.get(type);
         } catch (ArrayIndexOutOfBoundsException e) {
-            // Pass null through
+        	// Pass null through
         }
         if (rootFs == null) {
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, FileUtils.NOT_FOUND_ERR));
-        } else {
-            // If a nonzero required size was specified, check that the retrieved filesystem has enough free space.
-            long availableSize = 0;
-            if (requiredSize > 0) {
-                availableSize = rootFs.getFreeSpaceInBytes();
-            }
-
-            if (availableSize < requiredSize) {
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, FileUtils.QUOTA_EXCEEDED_ERR));
-            } else {
-                JSONObject fs = new JSONObject();
-                fs.put("name", rootFs.name);
-                fs.put("root", rootFs.getRootEntry());
-                callbackContext.success(fs);
-            }
+            throw new IOException("No filesystem of type requested");        	
         }
+        fs.put("name", rootFs.name);
+        fs.put("root", rootFs.getRootEntry());
+        return fs;
     }
+
 
     /**
      * Requests a filesystem in which to store application data.
@@ -916,7 +847,7 @@ public class FileUtils extends CordovaPlugin {
     private static String toDirUrl(File f) {
         return Uri.fromFile(f).toString() + '/';
     }
-
+    
     private JSONObject requestAllPaths() throws JSONException {
         Context context = cordova.getActivity();
         JSONObject ret = new JSONObject();
@@ -995,23 +926,23 @@ public class FileUtils extends CordovaPlugin {
         	if (fs == null) {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
-
+        
             fs.readFileAtURL(inputURL, start, end, new Filesystem.ReadFileCallback() {
                 public void handleData(InputStream inputStream, String contentType) {
             		try {
                         ByteArrayOutputStream os = new ByteArrayOutputStream();
                         final int BUFFER_SIZE = 8192;
                         byte[] buffer = new byte[BUFFER_SIZE];
-
+                        
                         for (;;) {
                             int bytesRead = inputStream.read(buffer, 0, BUFFER_SIZE);
-
+                            
                             if (bytesRead <= 0) {
                                 break;
                             }
                             os.write(buffer, 0, bytesRead);
                         }
-
+                                
             			PluginResult result;
             			switch (resultType) {
             			case PluginResult.MESSAGE_TYPE_STRING:
@@ -1064,12 +995,12 @@ public class FileUtils extends CordovaPlugin {
         	if (fs == null) {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
-
+        
             long x = fs.writeToFileAtURL(inputURL, data, offset, isBinary); Log.d("TEST",srcURLstr + ": "+x); return x;
         } catch (IllegalArgumentException e) {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
-
+        
     }
 
     /**
@@ -1082,53 +1013,10 @@ public class FileUtils extends CordovaPlugin {
         	if (fs == null) {
         		throw new MalformedURLException("No installed handlers for this URL");
         	}
-
+        
             return fs.truncateFileAtURL(inputURL, size);
         } catch (IllegalArgumentException e) {
         	throw new MalformedURLException("Unrecognized filesystem URL");
         }
-    }
-
-
-    /*
-     * Handle the response
-     */
-
-    public void onRequestPermissionResult(int requestCode, String[] permissions,
-                                          int[] grantResults) throws JSONException {
-        for(int r:grantResults)
-        {
-            if(r == PackageManager.PERMISSION_DENIED)
-            {
-                callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, SECURITY_ERR));
-            }
-        }
-        switch(requestCode)
-        {
-            case READ_PERM:
-                threadhelper( new FileOp( ){
-                    public void run(JSONArray args) throws FileExistsException, IOException, TypeMismatchException, EncodingException, JSONException {
-                        String dirname=args.getString(0);
-
-                        String path = args.getString(1);
-                        JSONObject obj = getFile(dirname, path, args.optJSONObject(2), false);
-                        callback.success(obj);
-                    }
-                }, lastRawArgs, callback);
-                break;
-            case WRITE_PERM:
-                threadhelper( new FileOp( ){
-                    public void run(JSONArray args) throws JSONException, FileNotFoundException, IOException, NoModificationAllowedException {
-                        String fname=args.getString(0);
-                        String data=args.getString(1);
-                        int offset=args.getInt(2);
-                        Boolean isBinary=args.getBoolean(3);
-                        long fileSize = write(fname, data, offset, isBinary);
-                        callback.sendPluginResult(new PluginResult(PluginResult.Status.OK, fileSize));
-                    }
-                }, lastRawArgs, callback);
-                break;
-        }
-
     }
 }

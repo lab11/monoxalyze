@@ -56,46 +56,45 @@ public class DirectoryManager {
     }
 
     /**
-     * Get the free space in external storage
-     *
+     * Get the free disk space
+     * 
      * @return 		Size in KB or -1 if not available
      */
-    public static long getFreeExternalStorageSpace() {
+    public static long getFreeDiskSpace(boolean checkInternal) {
         String status = Environment.getExternalStorageState();
-        long freeSpaceInBytes = 0;
+        long freeSpace = 0;
 
-        // Check if external storage exists
+        // If SD card exists
         if (status.equals(Environment.MEDIA_MOUNTED)) {
-            freeSpaceInBytes = getFreeSpaceInBytes(Environment.getExternalStorageDirectory().getPath());
-        } else {
-            // If no external storage then return -1
+            freeSpace = freeSpaceCalculation(Environment.getExternalStorageDirectory().getPath());
+        }
+        else if (checkInternal) {
+            freeSpace = freeSpaceCalculation("/");
+        }
+        // If no SD card and we haven't been asked to check the internal directory then return -1
+        else {
             return -1;
         }
 
-        return freeSpaceInBytes / 1024;
+        return freeSpace;
     }
 
     /**
-     * Given a path return the number of free bytes in the filesystem containing the path.
-     *
+     * Given a path return the number of free KB
+     * 
      * @param path to the file system
-     * @return free space in bytes
+     * @return free space in KB
      */
-    public static long getFreeSpaceInBytes(String path) {
-        try {
-            StatFs stat = new StatFs(path);
-            long blockSize = stat.getBlockSize();
-            long availableBlocks = stat.getAvailableBlocks();
-            return availableBlocks * blockSize;
-        } catch (IllegalArgumentException e) {
-            // The path was invalid. Just return 0 free bytes.
-            return 0;
-        }
+    private static long freeSpaceCalculation(String path) {
+        StatFs stat = new StatFs(path);
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return availableBlocks * blockSize / 1024;
     }
 
     /**
      * Determine if SD card exists.
-     *
+     * 
      * @return				T=exists, F=not found
      */
     public static boolean testSaveLocationExists() {

@@ -31,16 +31,16 @@ module.exports = {
     __format__: function(fullPath) {
         switch (this.name) {
             case 'temporary':
-                path = info.temporaryPath + FileSystem.encodeURIPath(fullPath);
+                path = info.temporaryPath + fullPath;
                 break;
             case 'persistent':
-                path = info.persistentPath + FileSystem.encodeURIPath(fullPath);
+                path = info.persistentPath + fullPath;
                 break;
             case 'root':
-                path = 'file://' + FileSystem.encodeURIPath(fullPath);
+                path = 'file://' + fullPath;
                 break;
         }
-        return path;
+        return window.encodeURI(path);
     }
 };
 
