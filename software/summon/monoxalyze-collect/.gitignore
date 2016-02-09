@@ -1,9 +1,6 @@
 platforms/android
 platforms/ios
 
-plugins/cordova-plugin-*
-plugins/com.*
-
 hooks
 
 
