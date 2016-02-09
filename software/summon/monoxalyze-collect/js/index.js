@@ -308,7 +308,7 @@ var app = {
 			} else {
 				document.getElementById("formwarn").innerHTML = "";
 				app.log("form value entered - starting writing process");
-				ble.writeWithoutResponse(deviceId,serviceId,startCollectId,data.buffer,app.nowCollecting,app.onError2);
+				ble.write(deviceId,serviceId,startCollectId,data.buffer,app.nowCollecting,app.onError2);
 			}
 		} else if (state == stateEnum.COLLECTING) {
 			var data = new Uint8Array(1);
