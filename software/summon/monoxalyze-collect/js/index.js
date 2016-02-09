@@ -129,6 +129,7 @@ var app = {
 		app.log(JSON.stringify(stopCollectId));
 		app.log(JSON.stringify(startReadId));
 		app.log(JSON.stringify(doneReadId));
+		app.log(JSON.stringify(lenReadId));
 		app.log(JSON.stringify(dataId));
 
 
