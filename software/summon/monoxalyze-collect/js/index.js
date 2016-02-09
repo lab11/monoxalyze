@@ -188,7 +188,7 @@ var app = {
 		
 		app.log("trying to write to file");	
 
-		/*window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory,function(directoryEntry) {
+		window.resolveLocalFileSystemURL(cordova.file.externalRootDirectory,function(directoryEntry) {
 			directoryEntry.getDirectory("monox",{create:true, exclusive:false},
 			function(directoryEntry) {
 				directoryEntry.getFile((temp.getTime()+".csv"), {create:true, exclusive:false}, 
@@ -209,9 +209,9 @@ var app = {
 			});
 		});
 
-		app.log("writing to the file done");*/
+		app.log("writing to the file done");
 
-		app.doneWritingFile();
+		//app.doneWritingFile();
 
 	},
 	donewithHTTP: function() {
