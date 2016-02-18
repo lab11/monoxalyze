@@ -55,13 +55,13 @@ var app = {
 
 		document.getElementById("title").innerHTML = String(deviceId);
 
-		/*networkState = navigator.connection.type;
+		networkState = navigator.connection.type;
 		if(networkState == Connection.NONE) {
 			document.getElementById("wifiwarn").innerHTML = "Please connect to a WIFI network!";
 			app.log("WARNING: Not connected to the network");
 		} else {
 			app.log("connected to the network");
-		}*/
+		}
 
 		document.addEventListener("online",app.wentOnline, false);
 		document.addEventListener("offline",app.wentOffline, false);
@@ -225,21 +225,33 @@ var app = {
 	},
 	dotheHTTP: function() {
 		//check the network state
-		/*networkState = navigator.connection.type;
+		networkState = navigator.connection.type;
 		if(networkState == Connection.NONE) {
 			app.log("network not enabled...skipping");
 			app.donewithHTTP();
 			return;
-		} */
+		}
 
 		medical = document.getElementById("medRead").value;
-		cordovaHTTP.setHeader("Content-Type","text/plain", function() {
+
+		/*cordovaHTTP.setHeader("Content-Type","text/plain", function() {
 				console.log("successfully set content type");
 			}, function() {
 				console.log("error in set content type");
-			});
+			});*/
 		var string64 = btoa(writeString);
-		cordovaHTTP.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}}, {}, function(response) {
+
+		$.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}},function(response,stat,xhr) {
+			if(stat != "success") {
+				app.log("post failed");
+				app.log(stat);
+			} else {
+				app.log("post succeeded");
+				app.donewithHTTP();
+			}
+		});
+
+		/*cordovaHTTP.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}}, {}, function(response) {
 				console.log(response.status);
 				app.donewithHTTP();
 			}, function(response) {
@@ -248,7 +260,7 @@ var app = {
 				} else {
 					console.log("post failed");
 				}
-			});
+			});*/
 	},
 	doneWritingFile: function(evt) {
 		console.log("Done writing the file, we should try gatd now");
