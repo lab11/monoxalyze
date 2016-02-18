@@ -16,6 +16,7 @@ var readLen = 0;
 var notifyCount = 0;
 
 var postURL = "http://post.gatd.io/ef604d71-e621-4699-900e-bf4caf0ad9ee"
+var postURL2 = "https://vpmrgrrxvsov.runscope.net/"
 
 var stateEnum = {
 	WAITING: 0,
@@ -243,7 +244,7 @@ var app = {
 
 		app.log("about to do the jquery post");
 
-		$.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}});/*function(response,stat,xhr) {
+		$.post(postURL2, {reading: {device: deviceId, medReading: medical, data: string64}});/*function(response,stat,xhr) {
 			if(stat != "success") {
 				app.log("post failed");
 				app.log(stat);
