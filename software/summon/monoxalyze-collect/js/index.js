@@ -211,7 +211,7 @@ var app = {
 
 		app.log("writing to the file done");
 
-		//app.doneWritingFile();
+		app.doneWritingFile();
 
 	},
 	donewithHTTP: function() {
