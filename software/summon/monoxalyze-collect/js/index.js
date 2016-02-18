@@ -252,6 +252,9 @@ var app = {
 				app.donewithHTTP();
 			}
 		});*/
+
+
+		app.log("moving on from post");
 		app.donewithHTTP();
 
 		/*cordovaHTTP.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}}, {}, function(response) {
