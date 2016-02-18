@@ -211,7 +211,7 @@ var app = {
 
 		app.log("writing to the file done");
 
-		app.doneWritingFile();
+		//app.doneWritingFile();
 
 	},
 	donewithHTTP: function() {
@@ -242,6 +242,7 @@ var app = {
 		var string64 = btoa(writeString);
 
 		app.log("about to do the jquery post");
+
 		$.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}},function(response,stat,xhr) {
 			if(stat != "success") {
 				app.log("post failed");
