@@ -243,7 +243,7 @@ var app = {
 
 		app.log("about to do the jquery post");
 
-		$.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}},function(response,stat,xhr) {
+		$.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}});/*function(response,stat,xhr) {
 			if(stat != "success") {
 				app.log("post failed");
 				app.log(stat);
@@ -251,7 +251,7 @@ var app = {
 				app.log("post succeeded");
 				app.donewithHTTP();
 			}
-		});
+		});*/
 
 		/*cordovaHTTP.post(postURL, {reading: {device: deviceId, medReading: medical, data: string64}}, {}, function(response) {
 				console.log(response.status);
